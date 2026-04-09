@@ -470,3 +470,35 @@ body {
 .emotion-cry {
     filter: grayscale(0.5);
 }
+
+/* ===== 新增動畫效果 ===== */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 5px #4ecca3; }
+    50% { text-shadow: 0 0 20px #4ecca3, 0 0 30px #4ecca3; }
+}
+
+@keyframes emotionShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}

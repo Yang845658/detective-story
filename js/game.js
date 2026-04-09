@@ -1,5 +1,5 @@
-// ===== 午夜美術館 - 遊戲引擎 v2.0 =====
-// 修訂版：支持場景互動物品、逐步獲得線索
+// ===== 改進循環 1: 視覺反饋增強 =====
+// 添加調查狀態變化、線索獲得特效
 
 class DetectiveGame {
     constructor() {
@@ -7,8 +7,9 @@ class DetectiveGame {
         this.currentScene = null;
         this.currentDialogueIndex = 0;
         this.collectedClues = [];
-        this.investigatedItems = []; // 已調查的物品
+        this.investigatedItems = [];
         this.isWaitingForChoice = false;
+        this.clueAnimationQueue = [];
         
         this.init();
     }
@@ -16,7 +17,7 @@ class DetectiveGame {
     async init() {
         this.bindEvents();
         await this.loadStory();
-        console.log('🔍 午夜美術館 v2.0 - 遊戲已初始化');
+        console.log('🔍 午夜美術館 v1.1 - 視覺反饋增強版');
     }
     
     bindEvents() {
@@ -51,6 +52,19 @@ class DetectiveGame {
         document.querySelector('.game-main')?.classList.remove('hidden');
         document.querySelector('.sidebar')?.classList.remove('hidden');
         this.loadScene('scene_1');
+        this.showStartEffect();
+    }
+    
+    showStartEffect() {
+        // 遊戲開始特效
+        const main = document.querySelector('.game-main');
+        if (main) {
+            main.style.opacity = '0';
+            main.style.transition = 'opacity 1s ease';
+            setTimeout(() => {
+                main.style.opacity = '1';
+            }, 100);
+        }
     }
     
     restartGame() {
@@ -75,13 +89,32 @@ class DetectiveGame {
         this.currentScene = scene;
         this.currentDialogueIndex = 0;
         this.isWaitingForChoice = false;
-        this.investigatedItems = []; // 重置場景調查狀態
+        this.investigatedItems = [];
         
         this.updateSceneDisplay(scene);
         this.updateCharacters(scene.characters);
         this.createInteractables(scene.interactables);
         this.clearChoices();
-        this.showDialogue();
+        this.showSceneTransition();
+        
+        setTimeout(() => {
+            this.showDialogue();
+        }, 500);
+    }
+    
+    showSceneTransition() {
+        // 場景切換特效
+        const sceneDisplay = document.getElementById('scene-display');
+        if (sceneDisplay) {
+            sceneDisplay.style.transform = 'translateX(20px)';
+            sceneDisplay.style.opacity = '0';
+            sceneDisplay.style.transition = 'all 0.5s ease';
+            
+            setTimeout(() => {
+                sceneDisplay.style.transform = 'translateX(0)';
+                sceneDisplay.style.opacity = '1';
+            }, 100);
+        }
     }
     
     updateSceneDisplay(scene) {
@@ -92,8 +125,16 @@ class DetectiveGame {
         
         const nameEl = document.getElementById('scene-name');
         const timeEl = document.getElementById('scene-time');
-        if (nameEl) nameEl.textContent = scene.name;
-        if (timeEl) timeEl.textContent = scene.time;
+        if (nameEl) {
+            nameEl.textContent = scene.name;
+            nameEl.style.animation = 'none';
+            nameEl.offsetHeight; // trigger reflow
+            nameEl.style.animation = 'slideIn 0.5s ease';
+        }
+        if (timeEl) {
+            timeEl.textContent = scene.time;
+            timeEl.style.animation = 'fadeIn 0.5s ease';
+        }
     }
     
     updateCharacters(characterIds) {
@@ -102,11 +143,12 @@ class DetectiveGame {
         
         area.innerHTML = '';
         
-        characterIds.forEach(charId => {
+        characterIds.forEach((charId, index) => {
             const char = this.storyData.characters[charId];
             if (char) {
                 const charEl = document.createElement('div');
                 charEl.className = 'character';
+                charEl.style.animationDelay = `${index * 0.2}s`;
                 charEl.innerHTML = `
                     <div class="character-avatar" style="background: ${char.color}20; border-color: ${char.color}">
                         ${char.emoji || '👤'}
@@ -127,9 +169,10 @@ class DetectiveGame {
         
         area.innerHTML = '';
         
-        interactables.forEach(item => {
+        interactables.forEach((item, index) => {
             const btn = document.createElement('button');
             btn.className = 'interactable-btn';
+            btn.style.animationDelay = `${index * 0.1}s`;
             btn.innerHTML = `
                 <span class="interactable-icon">${item.icon}</span>
                 <span class="interactable-name">${item.name}</span>
@@ -154,11 +197,20 @@ class DetectiveGame {
         
         this.investigatedItems.push(item.id);
         
+        // 視覺反饋：按鈕變色
+        const btn = Array.from(document.querySelectorAll('.interactable-btn'))
+            .find(b => b.textContent.includes(item.name));
+        if (btn) {
+            btn.classList.add('investigated');
+            btn.disabled = true;
+            btn.style.animation = 'pulse 0.5s ease';
+        }
+        
         // 添加線索
         if (item.clueId) {
             const clue = this.currentScene.clues.find(c => c.id === item.clueId);
             if (clue && !this.collectedClues.find(c => c.id === clue.id)) {
-                this.addClueToDisplay(clue);
+                this.addClueToDisplay(clue, true); // true = 有動畫
             }
         }
         
@@ -176,12 +228,20 @@ class DetectiveGame {
         if (speakerEl) {
             speakerEl.textContent = `🔍 調查 ${item.name}`;
             speakerEl.style.color = '#4ecca3';
+            speakerEl.style.animation = 'glow 1s ease infinite';
         }
         
         if (textEl) {
             const result = this.getInvestigationText(item.id);
             textEl.textContent = result;
+            textEl.style.animation = 'fadeIn 0.3s ease';
         }
+        
+        // 移除動畫
+        setTimeout(() => {
+            if (speakerEl) speakerEl.style.animation = '';
+            if (textEl) textEl.style.animation = '';
+        }, 2000);
     }
     
     getInvestigationText(itemId) {
@@ -220,22 +280,27 @@ class DetectiveGame {
             const speaker = this.storyData.characters[dialogue.speaker];
             speakerEl.textContent = speaker ? speaker.name : dialogue.speaker;
             speakerEl.style.color = speaker ? speaker.color : '#4ecca3';
+            
+            // 情感效果
+            if (dialogue.emotion) {
+                speakerEl.classList.add(`emotion-${dialogue.emotion}`);
+                setTimeout(() => speakerEl.classList.remove(`emotion-${dialogue.emotion}`), 1000);
+            }
         }
         
         if (textEl) {
             this.typeWriterEffect(textEl, dialogue.text);
         }
         
-        // 自動收集非互動物品線索（按順序）
+        // 自動收集非互動物品線索
         if (this.currentScene.clues) {
             this.autoCollectClues(this.currentDialogueIndex);
         }
     }
     
     autoCollectClues(dialogueIndex) {
-        // 只在特定對話索引收集線索（模擬逐步獲得）
         const clueCollectionPoints = {
-            'scene_1': [3, 9], // 在第 4 和第 10 段對話時收集
+            'scene_1': [3, 9],
             'scene_2': [3, 9],
             'scene_3': [3, 8],
             'scene_4': [3, 9]
@@ -255,7 +320,7 @@ class DetectiveGame {
                     !this.collectedClues.find(cc => cc.id === c.id)
                 );
                 if (nextClue) {
-                    this.addClueToDisplay(nextClue);
+                    this.addClueToDisplay(nextClue, true);
                 }
             }
         }
@@ -282,7 +347,7 @@ class DetectiveGame {
         this.showDialogue();
     }
     
-    addClueToDisplay(clue) {
+    addClueToDisplay(clue, withAnimation = false) {
         if (this.collectedClues.find(c => c.id === clue.id)) return;
         
         this.collectedClues.push(clue);
@@ -296,11 +361,19 @@ class DetectiveGame {
         
         const clueEl = document.createElement('div');
         clueEl.className = 'clue-item';
+        if (withAnimation) {
+            clueEl.style.animation = 'slideInRight 0.5s ease';
+        }
         clueEl.innerHTML = `
             <div class="clue-item-name">📌 ${clue.name}</div>
             <div class="clue-item-desc">${clue.description}</div>
         `;
         clueList.appendChild(clueEl);
+        
+        // 線索本滾動到底部
+        setTimeout(() => {
+            clueList.scrollTop = clueList.scrollHeight;
+        }, 100);
     }
     
     showChoices() {
@@ -311,10 +384,11 @@ class DetectiveGame {
         
         choicesArea.innerHTML = '';
         
-        this.currentScene.choices.forEach(choice => {
+        this.currentScene.choices.forEach((choice, index) => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
             btn.textContent = choice.text;
+            btn.style.animationDelay = `${index * 0.1}s`;
             
             if (choice.requiredClues) {
                 const hasAllClues = choice.requiredClues.every(clueId => 

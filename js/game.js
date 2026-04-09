@@ -1,5 +1,5 @@
-// ===== 改進循環 1: 視覺反饋增強 =====
-// 添加調查狀態變化、線索獲得特效
+// ===== 改進循環 2: 提示系統 =====
+// 添加卡關提示、關鍵線索提醒
 
 class DetectiveGame {
     constructor() {
@@ -9,7 +9,8 @@ class DetectiveGame {
         this.collectedClues = [];
         this.investigatedItems = [];
         this.isWaitingForChoice = false;
-        this.clueAnimationQueue = [];
+        this.inactionCount = 0; // 無操作計數
+        this.hintShown = false; // 是否已顯示提示
         
         this.init();
     }
@@ -17,7 +18,8 @@ class DetectiveGame {
     async init() {
         this.bindEvents();
         await this.loadStory();
-        console.log('🔍 午夜美術館 v1.1 - 視覺反饋增強版');
+        this.startInactionTimer();
+        console.log('🔍 午夜美術館 v1.2 - 提示系統版');
     }
     
     bindEvents() {
@@ -32,7 +34,13 @@ class DetectiveGame {
         document.getElementById('dialogue-box')?.addEventListener('click', () => {
             if (!this.isWaitingForChoice) {
                 this.nextDialogue();
+                this.resetInactionTimer();
             }
+        });
+        
+        // 添加提示按鈕
+        document.getElementById('hint-btn')?.addEventListener('click', () => {
+            this.showHint();
         });
     }
     
@@ -51,12 +59,13 @@ class DetectiveGame {
         document.getElementById('start-screen')?.classList.add('hidden');
         document.querySelector('.game-main')?.classList.remove('hidden');
         document.querySelector('.sidebar')?.classList.remove('hidden');
+        this.inactionCount = 0;
+        this.hintShown = false;
         this.loadScene('scene_1');
         this.showStartEffect();
     }
     
     showStartEffect() {
-        // 遊戲開始特效
         const main = document.querySelector('.game-main');
         if (main) {
             main.style.opacity = '0';
@@ -73,6 +82,8 @@ class DetectiveGame {
         this.collectedClues = [];
         this.investigatedItems = [];
         this.isWaitingForChoice = false;
+        this.inactionCount = 0;
+        this.hintShown = false;
         
         document.getElementById('clue-list').innerHTML = '<p class="empty-hint">暫无线索</p>';
         document.getElementById('end-screen')?.classList.add('hidden');
@@ -90,6 +101,7 @@ class DetectiveGame {
         this.currentDialogueIndex = 0;
         this.isWaitingForChoice = false;
         this.investigatedItems = [];
+        this.resetInactionTimer();
         
         this.updateSceneDisplay(scene);
         this.updateCharacters(scene.characters);
@@ -103,7 +115,6 @@ class DetectiveGame {
     }
     
     showSceneTransition() {
-        // 場景切換特效
         const sceneDisplay = document.getElementById('scene-display');
         if (sceneDisplay) {
             sceneDisplay.style.transform = 'translateX(20px)';
@@ -128,7 +139,7 @@ class DetectiveGame {
         if (nameEl) {
             nameEl.textContent = scene.name;
             nameEl.style.animation = 'none';
-            nameEl.offsetHeight; // trigger reflow
+            nameEl.offsetHeight;
             nameEl.style.animation = 'slideIn 0.5s ease';
         }
         if (timeEl) {
@@ -186,6 +197,7 @@ class DetectiveGame {
             
             btn.addEventListener('click', () => {
                 this.investigateItem(item);
+                this.resetInactionTimer();
             });
             
             area.appendChild(btn);
@@ -197,7 +209,6 @@ class DetectiveGame {
         
         this.investigatedItems.push(item.id);
         
-        // 視覺反饋：按鈕變色
         const btn = Array.from(document.querySelectorAll('.interactable-btn'))
             .find(b => b.textContent.includes(item.name));
         if (btn) {
@@ -206,18 +217,14 @@ class DetectiveGame {
             btn.style.animation = 'pulse 0.5s ease';
         }
         
-        // 添加線索
         if (item.clueId) {
             const clue = this.currentScene.clues.find(c => c.id === item.clueId);
             if (clue && !this.collectedClues.find(c => c.id === clue.id)) {
-                this.addClueToDisplay(clue, true); // true = 有動畫
+                this.addClueToDisplay(clue, true);
             }
         }
         
-        // 顯示調查結果
         this.showInvestigationResult(item);
-        
-        // 更新按鈕狀態
         this.createInteractables(this.currentScene.interactables);
     }
     
@@ -237,7 +244,6 @@ class DetectiveGame {
             textEl.style.animation = 'fadeIn 0.3s ease';
         }
         
-        // 移除動畫
         setTimeout(() => {
             if (speakerEl) speakerEl.style.animation = '';
             if (textEl) textEl.style.animation = '';
@@ -281,7 +287,6 @@ class DetectiveGame {
             speakerEl.textContent = speaker ? speaker.name : dialogue.speaker;
             speakerEl.style.color = speaker ? speaker.color : '#4ecca3';
             
-            // 情感效果
             if (dialogue.emotion) {
                 speakerEl.classList.add(`emotion-${dialogue.emotion}`);
                 setTimeout(() => speakerEl.classList.remove(`emotion-${dialogue.emotion}`), 1000);
@@ -292,7 +297,6 @@ class DetectiveGame {
             this.typeWriterEffect(textEl, dialogue.text);
         }
         
-        // 自動收集非互動物品線索
         if (this.currentScene.clues) {
             this.autoCollectClues(this.currentDialogueIndex);
         }
@@ -370,7 +374,6 @@ class DetectiveGame {
         `;
         clueList.appendChild(clueEl);
         
-        // 線索本滾動到底部
         setTimeout(() => {
             clueList.scrollTop = clueList.scrollHeight;
         }, 100);
@@ -378,6 +381,7 @@ class DetectiveGame {
     
     showChoices() {
         this.isWaitingForChoice = true;
+        this.stopInactionTimer();
         
         const choicesArea = document.getElementById('choices-area');
         if (!choicesArea || !this.currentScene.choices) return;
@@ -407,6 +411,9 @@ class DetectiveGame {
             
             choicesArea.appendChild(btn);
         });
+        
+        // 檢查是否需要提示
+        this.checkHintNeeded();
     }
     
     clearChoices() {
@@ -423,6 +430,111 @@ class DetectiveGame {
         } else if (choice.nextScene) {
             this.loadScene(choice.nextScene);
         }
+    }
+    
+    // ===== 提示系統 =====
+    
+    startInactionTimer() {
+        this.inactionTimer = setInterval(() => {
+            this.inactionCount++;
+            
+            // 10 秒無操作顯示輕微提示
+            if (this.inactionCount === 10 && !this.hintShown) {
+                this.showGentleHint();
+            }
+            
+            // 30 秒無操作顯示明確提示
+            if (this.inactionCount === 30 && !this.hintShown) {
+                this.showClearHint();
+            }
+        }, 1000);
+    }
+    
+    resetInactionTimer() {
+        this.inactionCount = 0;
+    }
+    
+    stopInactionTimer() {
+        if (this.inactionTimer) {
+            clearInterval(this.inactionTimer);
+        }
+    }
+    
+    showGentleHint() {
+        const speakerEl = document.getElementById('speaker-name');
+        const textEl = document.getElementById('dialogue-text');
+        
+        if (speakerEl) {
+            speakerEl.textContent = '💡 提示';
+            speakerEl.style.color = '#ffd700';
+        }
+        
+        if (textEl) {
+            textEl.textContent = '試試點擊場景中的物品進行調查，或者繼續對話獲取更多線索。';
+            textEl.style.animation = 'fadeIn 0.3s ease';
+        }
+        
+        this.hintShown = true;
+    }
+    
+    showClearHint() {
+        const speakerEl = document.getElementById('speaker-name');
+        const textEl = document.getElementById('dialogue-text');
+        
+        if (speakerEl) {
+            speakerEl.textContent = '📋 重要提示';
+            speakerEl.style.color = '#ffd700';
+        }
+        
+        if (textEl) {
+            const sceneId = this.currentScene?.id;
+            let hint = '';
+            
+            if (sceneId === 'scene_1') {
+                hint = '調查前台電話、掛鐘和訪客登記簿，這些可能藏有重要線索。';
+            } else if (sceneId === 'scene_2') {
+                hint = '仔細檢查破碎展櫃、警報器和地板腳印，思考玻璃碎片為什麼在外側。';
+            } else if (sceneId === 'scene_3') {
+                hint = '查看監控屏幕、值班記錄本和張偉的手機，注意時間線矛盾。';
+            } else if (sceneId === 'scene_4') {
+                hint = '檢查保險文件、李娜的公文包和文件櫃，找出關鍵證據。';
+            }
+            
+            textEl.textContent = hint;
+            textEl.style.animation = 'glow 1s ease infinite';
+        }
+        
+        this.hintShown = true;
+    }
+    
+    checkHintNeeded() {
+        // 檢查是否缺少關鍵線索
+        const sceneId = this.currentScene?.id;
+        const requiredClues = {
+            'scene_5': ['clue_key_holder', 'clue_briefcase', 'clue_insurance_doc']
+        };
+        
+        if (sceneId === 'scene_5') {
+            const missingClues = requiredClues[sceneId].filter(clueId => 
+                !this.collectedClues.find(c => c.id === clueId)
+            );
+            
+            if (missingClues.length > 0) {
+                const speakerEl = document.getElementById('speaker-name');
+                const textEl = document.getElementById('dialogue-text');
+                
+                if (speakerEl && textEl) {
+                    speakerEl.textContent = '⚠️ 線索不足';
+                    speakerEl.style.color = '#e74c3c';
+                    textEl.textContent = '你還沒有收集足夠的線索。請返回之前的場景，調查所有物品並完成對話。';
+                }
+            }
+        }
+    }
+    
+    showHint() {
+        this.hintShown = true;
+        this.showClearHint();
     }
 }
 

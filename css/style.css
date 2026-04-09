@@ -315,6 +315,29 @@ body {
     line-height: 1.6;
 }
 
+.hint-btn {
+    margin-top: 15px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+    color: #1a1a2e;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.95em;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.hint-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+}
+
+.hint-btn:active {
+    transform: translateY(0);
+}
+
 /* ===== 開始界面 ===== */
 .start-screen {
     position: fixed;

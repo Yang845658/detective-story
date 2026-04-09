@@ -1,5 +1,5 @@
-// ===== 改進循環 4: 對話節奏優化 =====
-// 添加關鍵台詞高亮、緊張場景加速
+// ===== 改進循環 5: 多結局系統 =====
+// 添加完美結局、評分系統、成就追蹤
 
 class DetectiveGame {
     constructor() {
@@ -12,7 +12,20 @@ class DetectiveGame {
         this.inactionCount = 0;
         this.hintShown = false;
         this.selectedClue = null;
-        this.dialogueSpeed = 30; // 打字機速度（毫秒/字）
+        this.dialogueSpeed = 30;
+        
+        // 成就追蹤
+        this.achievements = {
+            allCluesCollected: false,  // 收集所有線索
+            allItemsInvestigated: false, // 調查所有物品
+            perfectChoice: false,       // 一次選擇正確
+            noHintsUsed: false,         // 未使用提示
+            speedRun: false             // 快速通關
+        };
+        
+        this.gameStartTime = null;
+        this.totalItemsInGame = 15; // 總物品數
+        this.totalCluesInGame = 18; // 總線索數
         
         this.init();
     }
@@ -21,7 +34,7 @@ class DetectiveGame {
         this.bindEvents();
         await this.loadStory();
         this.startInactionTimer();
-        console.log('🔍 午夜美術館 v1.4 - 對話節奏優化版');
+        console.log('🔍 午夜美術館 v1.5 - 多結局系統版');
     }
     
     bindEvents() {
@@ -42,6 +55,7 @@ class DetectiveGame {
         
         document.getElementById('hint-btn')?.addEventListener('click', () => {
             this.showHint();
+            this.achievements.noHintsUsed = false;
         });
         
         document.getElementById('close-clue-detail')?.addEventListener('click', () => {
@@ -66,7 +80,14 @@ class DetectiveGame {
         document.querySelector('.sidebar')?.classList.remove('hidden');
         this.inactionCount = 0;
         this.hintShown = false;
-        this.dialogueSpeed = 30;
+        this.gameStartTime = Date.now();
+        this.achievements = {
+            allCluesCollected: false,
+            allItemsInvestigated: false,
+            perfectChoice: false,
+            noHintsUsed: true,
+            speedRun: false
+        };
         this.loadScene('scene_1');
         this.showStartEffect();
     }
@@ -92,6 +113,7 @@ class DetectiveGame {
         this.hintShown = false;
         this.selectedClue = null;
         this.dialogueSpeed = 30;
+        this.gameStartTime = null;
         
         document.getElementById('clue-list').innerHTML = '<p class="empty-hint">暫无线索</p>';
         document.getElementById('end-screen')?.classList.add('hidden');
@@ -112,7 +134,6 @@ class DetectiveGame {
         this.investigatedItems = [];
         this.resetInactionTimer();
         
-        // 根據場景設置對話節奏
         this.setDialogueSpeedForScene(sceneId);
         
         this.updateSceneDisplay(scene);
@@ -127,15 +148,15 @@ class DetectiveGame {
     }
     
     setDialogueSpeedForScene(sceneId) {
-        // 根據場景緊張程度設置對話速度
         const speeds = {
-            'scene_1': 30,  // 正常
-            'scene_2': 30,  // 正常
-            'scene_3': 25,  // 稍快（緊張）
-            'scene_4': 25,  // 稍快（對質）
-            'scene_5': 20,  // 快（最終推理）
-            'ending_good': 35,  // 慢（真相揭露）
-            'ending_bad': 35   // 慢（失敗結局）
+            'scene_1': 30,
+            'scene_2': 30,
+            'scene_3': 25,
+            'scene_4': 25,
+            'scene_5': 20,
+            'ending_good': 35,
+            'ending_perfect': 35,
+            'ending_bad': 35
         };
         this.dialogueSpeed = speeds[sceneId] || 30;
     }
@@ -252,6 +273,9 @@ class DetectiveGame {
         
         this.showInvestigationResult(item);
         this.createInteractables(this.currentScene.interactables);
+        
+        // 檢查成就
+        this.checkAchievements();
     }
     
     showInvestigationResult(item) {
@@ -320,7 +344,6 @@ class DetectiveGame {
         }
         
         if (textEl) {
-            // 檢查是否為關鍵台詞
             const isKeyDialogue = this.isKeyDialogue(dialogue.text);
             this.typeWriterEffect(textEl, dialogue.text, isKeyDialogue);
         }
@@ -330,8 +353,35 @@ class DetectiveGame {
         }
     }
     
+    autoCollectClues(dialogueIndex) {
+        const clueCollectionPoints = {
+            'scene_1': [3, 9],
+            'scene_2': [3, 9],
+            'scene_3': [3, 8],
+            'scene_4': [3, 9]
+        };
+        
+        const sceneId = this.currentScene.id;
+        const points = clueCollectionPoints[sceneId];
+        
+        if (points && points.includes(dialogueIndex)) {
+            const sceneClues = this.currentScene.clues.filter(c => !c.fromInteractable);
+            const collectedCount = this.collectedClues.filter(c => 
+                this.currentScene.clues.find(sc => sc.id === c.id)
+            ).length;
+            
+            if (collectedCount < sceneClues.length) {
+                const nextClue = sceneClues.find(c => 
+                    !this.collectedClues.find(cc => cc.id === c.id)
+                );
+                if (nextClue) {
+                    this.addClueToDisplay(nextClue, true);
+                }
+            }
+        }
+    }
+    
     isKeyDialogue(text) {
-        // 關鍵台詞關鍵詞
         const keywords = [
             '證據', '真相', '兇手', '就是你',
             '50 萬', '賭債', '切割器', '鑰匙',
@@ -344,14 +394,12 @@ class DetectiveGame {
     typeWriterEffect(element, text, isKeyDialogue = false) {
         element.textContent = '';
         
-        // 關鍵台詞高亮處理
         if (isKeyDialogue) {
             element.classList.add('key-dialogue');
         } else {
             element.classList.remove('key-dialogue');
         }
         
-        // 根據是否關鍵台詞調整速度
         const speed = isKeyDialogue ? this.dialogueSpeed * 1.5 : this.dialogueSpeed;
         
         let index = 0;
@@ -363,7 +411,6 @@ class DetectiveGame {
             } else {
                 clearInterval(timer);
                 
-                // 關鍵台詞完成後添加強調效果
                 if (isKeyDialogue) {
                     element.style.animation = 'glow 2s ease infinite';
                     setTimeout(() => {
@@ -414,6 +461,9 @@ class DetectiveGame {
         setTimeout(() => {
             clueList.scrollTop = clueList.scrollHeight;
         }, 100);
+        
+        // 檢查成就
+        this.checkAchievements();
     }
     
     showChoices() {
@@ -464,7 +514,52 @@ class DetectiveGame {
         if (choice.restart) {
             this.restartGame();
         } else if (choice.nextScene) {
+            // 記錄選擇
+            if (choice.nextScene === 'ending_good') {
+                this.achievements.perfectChoice = true;
+            }
             this.loadScene(choice.nextScene);
+        }
+    }
+    
+    // ===== 成就系統 =====
+    
+    checkAchievements() {
+        // 檢查所有線索收集
+        if (this.collectedClues.length >= this.totalCluesInGame) {
+            this.achievements.allCluesCollected = true;
+        }
+        
+        // 檢查所有物品調查
+        if (this.investigatedItems.length >= this.totalItemsInGame) {
+            this.achievements.allItemsInvestigated = true;
+        }
+    }
+    
+    calculateEnding() {
+        const gameTime = (Date.now() - this.gameStartTime) / 1000; // 秒
+        
+        // 完美結局條件：
+        // 1. 指認正確（李娜）
+        // 2. 收集所有線索
+        // 3. 調查所有物品
+        // 4. 未使用提示
+        // 5. 10 分鐘內完成
+        
+        const isPerfect = 
+            this.achievements.perfectChoice &&
+            this.achievements.allCluesCollected &&
+            this.achievements.allItemsInvestigated &&
+            this.achievements.noHintsUsed &&
+            gameTime < 600;
+        
+        if (isPerfect) {
+            this.achievements.speedRun = true;
+            return 'ending_perfect';
+        } else if (this.achievements.perfectChoice) {
+            return 'ending_good';
+        } else {
+            return 'ending_bad';
         }
     }
     

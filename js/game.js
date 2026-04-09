@@ -1,5 +1,5 @@
-// ===== 改進循環 2: 提示系統 =====
-// 添加卡關提示、關鍵線索提醒
+// ===== 改進循環 3: 線索本增強 =====
+// 添加線索詳情、線索關聯提示
 
 class DetectiveGame {
     constructor() {
@@ -9,8 +9,9 @@ class DetectiveGame {
         this.collectedClues = [];
         this.investigatedItems = [];
         this.isWaitingForChoice = false;
-        this.inactionCount = 0; // 無操作計數
-        this.hintShown = false; // 是否已顯示提示
+        this.inactionCount = 0;
+        this.hintShown = false;
+        this.selectedClue = null; // 當前選中的線索
         
         this.init();
     }
@@ -19,7 +20,7 @@ class DetectiveGame {
         this.bindEvents();
         await this.loadStory();
         this.startInactionTimer();
-        console.log('🔍 午夜美術館 v1.2 - 提示系統版');
+        console.log('🔍 午夜美術館 v1.3 - 線索本增強版');
     }
     
     bindEvents() {
@@ -38,9 +39,13 @@ class DetectiveGame {
             }
         });
         
-        // 添加提示按鈕
         document.getElementById('hint-btn')?.addEventListener('click', () => {
             this.showHint();
+        });
+        
+        // 線索詳情關閉按鈕
+        document.getElementById('close-clue-detail')?.addEventListener('click', () => {
+            this.closeClueDetail();
         });
     }
     
@@ -84,10 +89,12 @@ class DetectiveGame {
         this.isWaitingForChoice = false;
         this.inactionCount = 0;
         this.hintShown = false;
+        this.selectedClue = null;
         
         document.getElementById('clue-list').innerHTML = '<p class="empty-hint">暫无线索</p>';
         document.getElementById('end-screen')?.classList.add('hidden');
         document.getElementById('start-screen')?.classList.remove('hidden');
+        this.closeClueDetail();
     }
     
     loadScene(sceneId) {
@@ -372,6 +379,14 @@ class DetectiveGame {
             <div class="clue-item-name">📌 ${clue.name}</div>
             <div class="clue-item-desc">${clue.description}</div>
         `;
+        
+        // 添加點擊事件查看詳情
+        clueEl.addEventListener('click', () => {
+            this.showClueDetail(clue);
+        });
+        clueEl.style.cursor = 'pointer';
+        clueEl.title = '點擊查看詳情';
+        
         clueList.appendChild(clueEl);
         
         setTimeout(() => {
@@ -412,7 +427,6 @@ class DetectiveGame {
             choicesArea.appendChild(btn);
         });
         
-        // 檢查是否需要提示
         this.checkHintNeeded();
     }
     
@@ -438,12 +452,10 @@ class DetectiveGame {
         this.inactionTimer = setInterval(() => {
             this.inactionCount++;
             
-            // 10 秒無操作顯示輕微提示
             if (this.inactionCount === 10 && !this.hintShown) {
                 this.showGentleHint();
             }
             
-            // 30 秒無操作顯示明確提示
             if (this.inactionCount === 30 && !this.hintShown) {
                 this.showClearHint();
             }
@@ -508,7 +520,6 @@ class DetectiveGame {
     }
     
     checkHintNeeded() {
-        // 檢查是否缺少關鍵線索
         const sceneId = this.currentScene?.id;
         const requiredClues = {
             'scene_5': ['clue_key_holder', 'clue_briefcase', 'clue_insurance_doc']
@@ -535,6 +546,57 @@ class DetectiveGame {
     showHint() {
         this.hintShown = true;
         this.showClearHint();
+    }
+    
+    // ===== 線索詳情系統 =====
+    
+    showClueDetail(clue) {
+        this.selectedClue = clue;
+        
+        const detailPanel = document.getElementById('clue-detail-panel');
+        const detailTitle = document.getElementById('clue-detail-title');
+        const detailDesc = document.getElementById('clue-detail-desc');
+        const detailAnalysis = document.getElementById('clue-detail-analysis');
+        
+        if (detailPanel && detailTitle && detailDesc) {
+            detailTitle.textContent = `📌 ${clue.name}`;
+            detailDesc.textContent = clue.description;
+            
+            // 添加分析提示
+            if (detailAnalysis) {
+                const analysis = this.getClueAnalysis(clue.id);
+                detailAnalysis.textContent = analysis;
+            }
+            
+            detailPanel.classList.remove('hidden');
+            detailPanel.style.animation = 'slideInRight 0.3s ease';
+        }
+    }
+    
+    getClueAnalysis(clueId) {
+        const analyses = {
+            'clue_phone_record': '💡 張偉在報警前 3 分鐘打過電話給誰？這可能是他故意製造的假象。',
+            'clue_clock': '💡 掛鐘被打開過，可能是為了調整時間，製造不在場證明。',
+            'clue_logbook': '💡 李娜 18:00 最後離開，她有作案時間。',
+            'clue_cabinet': '💡 從內部敲碎 + 無撬痕 = 有鑰匙的人。只有張偉和李娜有鑰匙。',
+            'clue_alarm': '💡 警報被故意延遲，說明兇手知道警報系統。',
+            'clue_footprints': '💡 37 碼高跟鞋 = 李娜的鞋印。她在案發時在現場。',
+            'clue_monitor': '💡 監控是故意關閉的，不是故障。內部人員所為。',
+            'clue_shift_log': '💡 值班記錄被塗改，張偉想掩蓋什麼？',
+            'clue_phone_msg': '💡 張偉有賭債動機，但這太明顯了...可能是被嫁禍。',
+            'clue_insurance_doc': '💡 內部人員作案可拒賠，所以李娜需要嫁禍給張偉。',
+            'clue_briefcase': '💡 玻璃切割器！這是專業工具，普通人不會隨身攜帶。',
+            'clue_file_cabinet': '💡 李娜知道張偉的賭債，說明她早就計劃嫁禍給他。'
+        };
+        return analyses[clueId] || '💡 這條線索可能很重要，仔細思考它的含義。';
+    }
+    
+    closeClueDetail() {
+        const detailPanel = document.getElementById('clue-detail-panel');
+        if (detailPanel) {
+            detailPanel.classList.add('hidden');
+        }
+        this.selectedClue = null;
     }
 }
 

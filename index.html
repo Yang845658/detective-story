@@ -59,6 +59,7 @@
                 <div class="clue-list" id="clue-list">
                     <p class="empty-hint">暫无线索</p>
                 </div>
+                <p class="clue-hint">💡 點擊線索查看詳情</p>
             </div>
 
             <!-- 筆記 -->
@@ -72,6 +73,19 @@
                 <button id="hint-btn" class="hint-btn">💡 需要提示</button>
             </div>
         </aside>
+
+        <!-- 線索詳情面板 -->
+        <div id="clue-detail-panel" class="clue-detail-panel hidden">
+            <div class="clue-detail-content">
+                <button id="close-clue-detail" class="close-btn">✕</button>
+                <h3 id="clue-detail-title">📌 線索名稱</h3>
+                <p id="clue-detail-desc">線索描述</p>
+                <div class="clue-analysis">
+                    <h4>💡 分析提示</h4>
+                    <p id="clue-detail-analysis"></p>
+                </div>
+            </div>
+        </div>
 
         <!-- 開始界面 -->
         <div class="start-screen" id="start-screen">

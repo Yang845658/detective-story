@@ -1,0 +1,363 @@
+{
+  "title": "午夜美術館",
+  "description": "偵探推理互動小說",
+  "version": "1.0.0",
+  "author": "OpenClaw",
+  "scenes": [
+    {
+      "id": "scene_1",
+      "name": "美術館大廳",
+      "time": "23:00",
+      "background": "#1a1a2e",
+      "characters": ["zhangwei"],
+      "dialogues": [
+        {
+          "speaker": "narrator",
+          "text": "深夜 11 點，你接到美術館的報案電話。",
+          "effect": "fade-in"
+        },
+        {
+          "speaker": "narrator",
+          "text": "鎮館之寶「月光之淚」鑽石被盜。",
+          "effect": ""
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "林、林偵探！你可算來了！",
+          "emotion": "nervous"
+        },
+        {
+          "speaker": "linming",
+          "text": "張隊長，別著急。詳細說說情況。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "今、今晚 10 點 30 分，警報突然響了。我趕到展覽室，發現展櫃被砸了，鑽石不見了！",
+          "emotion": "nervous"
+        }
+      ],
+      "clues": [
+        {
+          "id": "clue_time",
+          "name": "案發時間",
+          "description": "警報於 22:30 響起"
+        },
+        {
+          "id": "clue_item",
+          "name": "被盜物品",
+          "description": "月光之淚鑽石"
+        }
+      ],
+      "choices": [
+        {
+          "text": "勘察展覽室",
+          "nextScene": "scene_2"
+        }
+      ]
+    },
+    {
+      "id": "scene_2",
+      "name": "展覽室",
+      "time": "23:15",
+      "background": "#16213e",
+      "characters": ["lina"],
+      "dialogues": [
+        {
+          "speaker": "narrator",
+          "text": "你來到展覽室，看到破碎的展櫃。",
+          "effect": ""
+        },
+        {
+          "speaker": "linming",
+          "text": "（觀察）展櫃玻璃是從外面敲碎的，碎片都在外側。",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "linming",
+          "text": "奇怪，如果是外面敲的，警報為什麼 22:30 才響？",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "lina",
+          "text": "林偵探，我是策展人李娜。有什麼發現嗎？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "李小姐，你最後一次見到鑽石是什麼時候？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "lina",
+          "text": "今天下午 6 點，閉館前我檢查過，一切正常。",
+          "emotion": "calm"
+        }
+      ],
+      "clues": [
+        {
+          "id": "clue_glass",
+          "name": "玻璃碎片",
+          "description": "碎片都在展櫃外側"
+        },
+        {
+          "id": "clue_lastcheck",
+          "name": "最後確認",
+          "description": "今天 18:00 李娜確認過鑽石"
+        }
+      ],
+      "choices": [
+        {
+          "text": "詢問保安",
+          "nextScene": "scene_3"
+        }
+      ]
+    },
+    {
+      "id": "scene_3",
+      "name": "保安室",
+      "time": "23:45",
+      "background": "#0f3460",
+      "characters": ["zhangwei"],
+      "dialogues": [
+        {
+          "speaker": "linming",
+          "text": "張隊長，今晚的監控錄像呢？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "監、監控壞了，從 8 點開始就沒有畫面。",
+          "emotion": "nervous"
+        },
+        {
+          "speaker": "linming",
+          "text": "（記筆記）這麼巧？值班記錄呢？",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "我、我 9 點到 11 點值班，一直在大廳，什麼都沒看見...",
+          "emotion": "nervous"
+        }
+      ],
+      "clues": [
+        {
+          "id": "clue_camera",
+          "name": "監控記錄",
+          "description": "監控從 20:00 開始故障"
+        },
+        {
+          "id": "clue_shift",
+          "name": "值班記錄",
+          "description": "張偉 21:00-23:00 值班"
+        }
+      ],
+      "contradictions": [
+        {
+          "id": "contradiction_1",
+          "description": "張偉說監控 8 點壞了，但他 9 點才值班，他怎麼知道確切時間？",
+          "clueRequired": "clue_shift"
+        }
+      ],
+      "choices": [
+        {
+          "text": "最終推理",
+          "nextScene": "scene_4"
+        }
+      ]
+    },
+    {
+      "id": "scene_4",
+      "name": "辦公室",
+      "time": "00:30",
+      "background": "#1a1a2e",
+      "characters": ["lina", "wangye"],
+      "dialogues": [
+        {
+          "speaker": "narrator",
+          "text": "所有人都在辦公室等待你的結論。",
+          "effect": ""
+        },
+        {
+          "speaker": "linming",
+          "text": "我已經知道真相了。",
+          "emotion": "confident"
+        }
+      ],
+      "choices": [
+        {
+          "text": "指認張偉是兇手",
+          "nextScene": "ending_good",
+          "requiredClue": "clue_shift"
+        },
+        {
+          "text": "指認李娜是兇手",
+          "nextScene": "ending_bad"
+        },
+        {
+          "text": "指認王老爺子是兇手",
+          "nextScene": "ending_bad"
+        }
+      ]
+    },
+    {
+      "id": "ending_good",
+      "name": "真相結局",
+      "time": "",
+      "background": "#4ecca3",
+      "characters": [],
+      "dialogues": [
+        {
+          "speaker": "linming",
+          "text": "兇手就是你，張偉！",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "你、你有什麼證據！",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "linming",
+          "text": "第一，你說監控 8 點壞了，但你 9 點才值班，你怎麼知道確切時間？",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第二，玻璃碎片在外側，說明是從裡面敲碎的。只有內部人員能做到。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第三，你欠了 50 萬賭債，對吧？",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（崩潰）我、我只是想借錢周轉...我真的沒想偷鑽石...",
+          "emotion": "cry"
+        },
+        {
+          "speaker": "narrator",
+          "text": "真相大白。張偉利用職務之便複製了鑰匙，從內部敲碎玻璃。",
+          "effect": ""
+        },
+        {
+          "speaker": "narrator",
+          "text": "鑽石被找回，張偉被警察帶走。",
+          "effect": ""
+        },
+        {
+          "speaker": "narrator",
+          "text": "【通關！真相結局】",
+          "effect": "success"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新開始",
+          "nextScene": "scene_1",
+          "restart": true
+        }
+      ]
+    },
+    {
+      "id": "ending_bad",
+      "name": "錯誤結局",
+      "time": "",
+      "background": "#e74c3c",
+      "characters": [],
+      "dialogues": [
+        {
+          "speaker": "linming",
+          "text": "兇手就是你！",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "林偵探，你有證據嗎？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "你是策展人，最有機會接觸鑽石...",
+          "emotion": "unsure"
+        },
+        {
+          "speaker": "lina",
+          "text": "就憑這個？美術館每天幾百人參觀，每個人都有機會。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "wangye",
+          "text": "哼，這樣的偵探，真是笑話。",
+          "emotion": "angry"
+        },
+        {
+          "speaker": "narrator",
+          "text": "你被請出了美術館。真正的兇手逍遙法外。",
+          "effect": ""
+        },
+        {
+          "speaker": "narrator",
+          "text": "你的聲譽受損，事務所門庭冷落。",
+          "effect": ""
+        },
+        {
+          "speaker": "narrator",
+          "text": "【失敗！錯誤結局】",
+          "effect": "fail"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新開始",
+          "nextScene": "scene_1",
+          "restart": true
+        }
+      ]
+    }
+  ],
+  "characters": {
+    "linming": {
+      "name": "林明",
+      "role": "主角",
+      "description": "私家偵探，28 歲",
+      "color": "#3498db"
+    },
+    "zhangwei": {
+      "name": "張偉",
+      "role": "嫌疑人",
+      "description": "保安隊長，35 歲",
+      "color": "#e67e22"
+    },
+    "lina": {
+      "name": "李娜",
+      "role": "嫌疑人",
+      "description": "策展人，32 歲",
+      "color": "#9b59b6"
+    },
+    "wangye": {
+      "name": "王老爺子",
+      "role": "嫌疑人",
+      "description": "捐贈者，68 歲",
+      "color": "#95a5a6"
+    },
+    "narrator": {
+      "name": "旁白",
+      "role": "敘述者",
+      "description": "故事敘述者",
+      "color": "#7f8c8d"
+    }
+  },
+  "emotions": {
+    "calm": "平靜",
+    "nervous": "緊張",
+    "thinking": "思考",
+    "confident": "自信",
+    "panic": "驚慌",
+    "cry": "崩潰",
+    "angry": "生氣"
+  }
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="午夜美術館 - 偵探推理互動小說">
+    <title>🔍 午夜美術館 - 偵探推理互動小說</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 遊戲標題 -->
+        <header class="game-header">
+            <h1>🔍 午夜美術館</h1>
+            <p class="subtitle">偵探推理互動小說</p>
+        </header>
+
+        <!-- 主遊戲區域 -->
+        <main class="game-main">
+            <!-- 場景顯示 -->
+            <div class="scene-display" id="scene-display">
+                <div class="scene-background" id="scene-bg"></div>
+                <div class="scene-info">
+                    <span class="scene-name" id="scene-name">美術館大廳</span>
+                    <span class="scene-time" id="scene-time">23:00</span>
+                </div>
+            </div>
+
+            <!-- 角色頭像區域 -->
+            <div class="characters-area" id="characters-area">
+                <!-- 動態生成角色 -->
+            </div>
+
+            <!-- 對話框 -->
+            <div class="dialogue-box" id="dialogue-box">
+                <div class="speaker-name" id="speaker-name"></div>
+                <div class="dialogue-text" id="dialogue-text"></div>
+                <div class="dialogue-progress">
+                    <span class="progress-indicator">點擊繼續</span>
+                </div>
+            </div>
+
+            <!-- 選項區域 -->
+            <div class="choices-area" id="choices-area">
+                <!-- 動態生成選項 -->
+            </div>
+        </main>
+
+        <!-- 側邊欄 -->
+        <aside class="sidebar">
+            <!-- 線索本 -->
+            <div class="clue-book" id="clue-book">
+                <h3>📋 線索本</h3>
+                <div class="clue-list" id="clue-list">
+                    <p class="empty-hint">暫无线索</p>
+                </div>
+            </div>
+
+            <!-- 筆記 -->
+            <div class="notes" id="notes">
+                <h3>📝 筆記</h3>
+                <div class="note-content">
+                    <p>• 仔細觀察每個細節</p>
+                    <p>• 記錄矛盾之處</p>
+                    <p>• 推理要基於證據</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 開始界面 -->
+        <div class="start-screen" id="start-screen">
+            <h1>🔍 午夜美術館</h1>
+            <p class="story-intro">
+                深夜 11 點，你接到美術館的報案電話。<br>
+                鎮館之寶「月光之淚」鑽石被盜。<br>
+                三名嫌疑人，一個真相。<br>
+                你能找出真正的兇手嗎？
+            </p>
+            <button class="btn btn-start" id="start-btn">開始調查</button>
+            <div class="game-info">
+                <p>🎮 遊戲類型：偵探推理互動小說</p>
+                <p>⏱️ 預計時長：30 分鐘</p>
+                <p>🎯 結局數量：2 個（真相/錯誤）</p>
+            </div>
+        </div>
+
+        <!-- 結束界面 -->
+        <div class="end-screen hidden" id="end-screen">
+            <h1 id="end-title">結局</h1>
+            <p id="end-message"></p>
+            <button class="btn btn-restart" id="restart-btn">重新開始</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

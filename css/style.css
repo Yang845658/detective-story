@@ -573,6 +573,13 @@ body {
     filter: grayscale(0.5);
 }
 
+/* ===== 對話節奏樣式 ===== */
+.key-dialogue {
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
 /* ===== 新增動畫效果 ===== */
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(20px); }

@@ -1,5 +1,5 @@
-// ===== 改進循環 3: 線索本增強 =====
-// 添加線索詳情、線索關聯提示
+// ===== 改進循環 4: 對話節奏優化 =====
+// 添加關鍵台詞高亮、緊張場景加速
 
 class DetectiveGame {
     constructor() {
@@ -11,7 +11,8 @@ class DetectiveGame {
         this.isWaitingForChoice = false;
         this.inactionCount = 0;
         this.hintShown = false;
-        this.selectedClue = null; // 當前選中的線索
+        this.selectedClue = null;
+        this.dialogueSpeed = 30; // 打字機速度（毫秒/字）
         
         this.init();
     }
@@ -20,7 +21,7 @@ class DetectiveGame {
         this.bindEvents();
         await this.loadStory();
         this.startInactionTimer();
-        console.log('🔍 午夜美術館 v1.3 - 線索本增強版');
+        console.log('🔍 午夜美術館 v1.4 - 對話節奏優化版');
     }
     
     bindEvents() {
@@ -43,7 +44,6 @@ class DetectiveGame {
             this.showHint();
         });
         
-        // 線索詳情關閉按鈕
         document.getElementById('close-clue-detail')?.addEventListener('click', () => {
             this.closeClueDetail();
         });
@@ -66,6 +66,7 @@ class DetectiveGame {
         document.querySelector('.sidebar')?.classList.remove('hidden');
         this.inactionCount = 0;
         this.hintShown = false;
+        this.dialogueSpeed = 30;
         this.loadScene('scene_1');
         this.showStartEffect();
     }
@@ -90,6 +91,7 @@ class DetectiveGame {
         this.inactionCount = 0;
         this.hintShown = false;
         this.selectedClue = null;
+        this.dialogueSpeed = 30;
         
         document.getElementById('clue-list').innerHTML = '<p class="empty-hint">暫无线索</p>';
         document.getElementById('end-screen')?.classList.add('hidden');
@@ -110,6 +112,9 @@ class DetectiveGame {
         this.investigatedItems = [];
         this.resetInactionTimer();
         
+        // 根據場景設置對話節奏
+        this.setDialogueSpeedForScene(sceneId);
+        
         this.updateSceneDisplay(scene);
         this.updateCharacters(scene.characters);
         this.createInteractables(scene.interactables);
@@ -119,6 +124,20 @@ class DetectiveGame {
         setTimeout(() => {
             this.showDialogue();
         }, 500);
+    }
+    
+    setDialogueSpeedForScene(sceneId) {
+        // 根據場景緊張程度設置對話速度
+        const speeds = {
+            'scene_1': 30,  // 正常
+            'scene_2': 30,  // 正常
+            'scene_3': 25,  // 稍快（緊張）
+            'scene_4': 25,  // 稍快（對質）
+            'scene_5': 20,  // 快（最終推理）
+            'ending_good': 35,  // 慢（真相揭露）
+            'ending_bad': 35   // 慢（失敗結局）
+        };
+        this.dialogueSpeed = speeds[sceneId] || 30;
     }
     
     showSceneTransition() {
@@ -301,7 +320,9 @@ class DetectiveGame {
         }
         
         if (textEl) {
-            this.typeWriterEffect(textEl, dialogue.text);
+            // 檢查是否為關鍵台詞
+            const isKeyDialogue = this.isKeyDialogue(dialogue.text);
+            this.typeWriterEffect(textEl, dialogue.text, isKeyDialogue);
         }
         
         if (this.currentScene.clues) {
@@ -309,36 +330,30 @@ class DetectiveGame {
         }
     }
     
-    autoCollectClues(dialogueIndex) {
-        const clueCollectionPoints = {
-            'scene_1': [3, 9],
-            'scene_2': [3, 9],
-            'scene_3': [3, 8],
-            'scene_4': [3, 9]
-        };
+    isKeyDialogue(text) {
+        // 關鍵台詞關鍵詞
+        const keywords = [
+            '證據', '真相', '兇手', '就是你',
+            '50 萬', '賭債', '切割器', '鑰匙',
+            '內部', '嫁禍', '保險'
+        ];
         
-        const sceneId = this.currentScene.id;
-        const points = clueCollectionPoints[sceneId];
-        
-        if (points && points.includes(dialogueIndex)) {
-            const sceneClues = this.currentScene.clues.filter(c => !c.fromInteractable);
-            const collectedCount = this.collectedClues.filter(c => 
-                this.currentScene.clues.find(sc => sc.id === c.id)
-            ).length;
-            
-            if (collectedCount < sceneClues.length) {
-                const nextClue = sceneClues.find(c => 
-                    !this.collectedClues.find(cc => cc.id === c.id)
-                );
-                if (nextClue) {
-                    this.addClueToDisplay(nextClue, true);
-                }
-            }
-        }
+        return keywords.some(keyword => text.includes(keyword));
     }
     
-    typeWriterEffect(element, text) {
+    typeWriterEffect(element, text, isKeyDialogue = false) {
         element.textContent = '';
+        
+        // 關鍵台詞高亮處理
+        if (isKeyDialogue) {
+            element.classList.add('key-dialogue');
+        } else {
+            element.classList.remove('key-dialogue');
+        }
+        
+        // 根據是否關鍵台詞調整速度
+        const speed = isKeyDialogue ? this.dialogueSpeed * 1.5 : this.dialogueSpeed;
+        
         let index = 0;
         
         const timer = setInterval(() => {
@@ -347,8 +362,16 @@ class DetectiveGame {
                 index++;
             } else {
                 clearInterval(timer);
+                
+                // 關鍵台詞完成後添加強調效果
+                if (isKeyDialogue) {
+                    element.style.animation = 'glow 2s ease infinite';
+                    setTimeout(() => {
+                        element.style.animation = '';
+                    }, 4000);
+                }
             }
-        }, 30);
+        }, speed);
     }
     
     nextDialogue() {
@@ -380,7 +403,6 @@ class DetectiveGame {
             <div class="clue-item-desc">${clue.description}</div>
         `;
         
-        // 添加點擊事件查看詳情
         clueEl.addEventListener('click', () => {
             this.showClueDetail(clue);
         });
@@ -562,7 +584,6 @@ class DetectiveGame {
             detailTitle.textContent = `📌 ${clue.name}`;
             detailDesc.textContent = clue.description;
             
-            // 添加分析提示
             if (detailAnalysis) {
                 const analysis = this.getClueAnalysis(clue.id);
                 detailAnalysis.textContent = analysis;

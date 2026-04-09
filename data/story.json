@@ -1,8 +1,7 @@
 {
   "title": "午夜美術館",
-  "description": "偵探推理互動小說",
-  "version": "1.0.0",
-  "author": "OpenClaw",
+  "version": "2.0",
+  "description": "偵探推理互動小說 - 修訂版",
   "scenes": [
     {
       "id": "scene_1",
@@ -10,16 +9,34 @@
       "time": "23:00",
       "background": "#1a1a2e",
       "characters": ["zhangwei"],
+      "interactables": [
+        {
+          "id": "phone",
+          "name": "前台電話",
+          "icon": "📱",
+          "clueId": "clue_phone_record"
+        },
+        {
+          "id": "clock",
+          "name": "掛鐘",
+          "icon": "🕐",
+          "clueId": "clue_clock"
+        },
+        {
+          "id": "logbook",
+          "name": "訪客登記簿",
+          "icon": "📋",
+          "clueId": "clue_logbook"
+        }
+      ],
       "dialogues": [
         {
           "speaker": "narrator",
-          "text": "深夜 11 點，你接到美術館的報案電話。",
-          "effect": "fade-in"
+          "text": "深夜 11 點，你接到美術館的報案電話。鎮館之寶「月光之淚」鑽石被盜。"
         },
         {
           "speaker": "narrator",
-          "text": "鎮館之寶「月光之淚」鑽石被盜。",
-          "effect": ""
+          "text": "你抵達美術館，張偉在大廳等候。"
         },
         {
           "speaker": "zhangwei",
@@ -35,18 +52,75 @@
           "speaker": "zhangwei",
           "text": "今、今晚 10 點 30 分，警報突然響了。我趕到展覽室，發現展櫃被砸了，鑽石不見了！",
           "emotion": "nervous"
+        },
+        {
+          "speaker": "linming",
+          "text": "你一個人來的？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "對，我、我一個人值班。",
+          "emotion": "nervous"
+        },
+        {
+          "speaker": "narrator",
+          "text": "（張偉下意識地摸了摸口袋，有什麼東西在響）"
+        },
+        {
+          "speaker": "linming",
+          "text": "（注意到）那是什麼聲音？",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "沒、沒什麼！手機而已...最近總有催債電話，煩死了...",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "narrator",
+          "text": "【獲得線索】張偉最近接催債電話"
         }
       ],
       "clues": [
         {
           "id": "clue_time",
           "name": "案發時間",
-          "description": "警報於 22:30 響起"
+          "description": "警報於 22:30 響起",
+          "order": 1
         },
         {
           "id": "clue_item",
           "name": "被盜物品",
-          "description": "月光之淚鑽石"
+          "description": "月光之淚鑽石",
+          "order": 2
+        },
+        {
+          "id": "clue_zhangwei_nervous",
+          "name": "張偉的異常",
+          "description": "緊張、接催債電話",
+          "order": 3
+        },
+        {
+          "id": "clue_phone_record",
+          "name": "電話記錄",
+          "description": "22:28 撥打報警，22:25 張偉未接來電",
+          "order": 4,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_clock",
+          "name": "掛鐘異常",
+          "description": "電池蓋是鬆的，有人打開過",
+          "order": 5,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_logbook",
+          "name": "訪客記錄",
+          "description": "李娜 18:00 簽名，備註「閉館檢查」",
+          "order": 6,
+          "fromInteractable": true
         }
       ],
       "choices": [
@@ -62,20 +136,34 @@
       "time": "23:15",
       "background": "#16213e",
       "characters": ["lina"],
+      "interactables": [
+        {
+          "id": "cabinet",
+          "name": "破碎展櫃",
+          "icon": "💎",
+          "clueId": "clue_cabinet"
+        },
+        {
+          "id": "alarm",
+          "name": "警報器",
+          "icon": "🔔",
+          "clueId": "clue_alarm"
+        },
+        {
+          "id": "footprints",
+          "name": "地板腳印",
+          "icon": "👣",
+          "clueId": "clue_footprints"
+        }
+      ],
       "dialogues": [
         {
           "speaker": "narrator",
-          "text": "你來到展覽室，看到破碎的展櫃。",
-          "effect": ""
+          "text": "你來到展覽室，看到破碎的展櫃。玻璃碎片散落一地。"
         },
         {
           "speaker": "linming",
-          "text": "（觀察）展櫃玻璃是從外面敲碎的，碎片都在外側。",
-          "emotion": "thinking"
-        },
-        {
-          "speaker": "linming",
-          "text": "奇怪，如果是外面敲的，警報為什麼 22:30 才響？",
+          "text": "（蹲下觀察）展櫃玻璃是從外面敲碎的，碎片都在外側。這很奇怪...",
           "emotion": "thinking"
         },
         {
@@ -92,18 +180,75 @@
           "speaker": "lina",
           "text": "今天下午 6 點，閉館前我檢查過，一切正常。",
           "emotion": "calm"
+        },
+        {
+          "speaker": "narrator",
+          "text": "（她語氣平靜，眼神卻时不时飄向展櫃）"
+        },
+        {
+          "speaker": "linming",
+          "text": "你檢查時，有人在場嗎？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "lina",
+          "text": "張隊長也在。我們一起檢查的。對了，林偵探，這個展櫃...保險公司上周剛來評估過。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "保險公司？",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "lina",
+          "text": "是的，這顆鑽石投保了 500 萬。我是受益人，如果出事...",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "narrator",
+          "text": "【獲得線索】李娜是保險受益人"
         }
       ],
       "clues": [
         {
           "id": "clue_glass",
           "name": "玻璃碎片",
-          "description": "碎片都在展櫃外側"
+          "description": "碎片都在外側（從內打破？）",
+          "order": 1
         },
         {
           "id": "clue_lastcheck",
           "name": "最後確認",
-          "description": "今天 18:00 李娜確認過鑽石"
+          "description": "18:00 李娜 + 張偉一起檢查",
+          "order": 2
+        },
+        {
+          "id": "clue_insurance",
+          "name": "保險信息",
+          "description": "投保 500 萬，李娜是受益人",
+          "order": 3
+        },
+        {
+          "id": "clue_cabinet",
+          "name": "展櫃狀態",
+          "description": "從內部敲碎，鎖無撬痕（有鑰匙）",
+          "order": 4,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_alarm",
+          "name": "警報器",
+          "description": "22:30 觸發，線路有被動過的痕跡",
+          "order": 5,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_footprints",
+          "name": "地板腳印",
+          "description": "保安皮鞋 + 37 碼高跟鞋",
+          "order": 6,
+          "fromInteractable": true
         }
       ],
       "choices": [
@@ -119,6 +264,26 @@
       "time": "23:45",
       "background": "#0f3460",
       "characters": ["zhangwei"],
+      "interactables": [
+        {
+          "id": "monitor",
+          "name": "監控屏幕",
+          "icon": "📹",
+          "clueId": "clue_monitor"
+        },
+        {
+          "id": "shift_log",
+          "name": "值班記錄本",
+          "icon": "📝",
+          "clueId": "clue_shift_log"
+        },
+        {
+          "id": "phone_msg",
+          "name": "張偉的手機",
+          "icon": "📱",
+          "clueId": "clue_phone_msg"
+        }
+      ],
       "dialogues": [
         {
           "speaker": "linming",
@@ -132,37 +297,83 @@
         },
         {
           "speaker": "linming",
-          "text": "（記筆記）這麼巧？值班記錄呢？",
+          "text": "這麼巧？值班記錄呢？",
           "emotion": "thinking"
         },
         {
           "speaker": "zhangwei",
           "text": "我、我 9 點到 11 點值班，一直在大廳，什麼都沒看見...",
           "emotion": "nervous"
+        },
+        {
+          "speaker": "linming",
+          "text": "（拿起值班記錄）讓我看看...奇怪，記錄上寫著「20:00 巡邏展覽室」，你不是說 9 點才開始值班嗎？",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "我、我記錯了...其實是 8 點開始的...",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "linming",
+          "text": "那監控也是 8 點壞的？",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "對、對！就是 8 點！",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "narrator",
+          "text": "【發現矛盾】張偉說監控 8 點壞了，但他怎麼知道確切時間？"
         }
       ],
       "clues": [
         {
           "id": "clue_camera",
           "name": "監控記錄",
-          "description": "監控從 20:00 開始故障"
+          "description": "聲稱從 20:00 開始故障",
+          "order": 1
         },
         {
           "id": "clue_shift",
           "name": "值班記錄",
-          "description": "張偉 21:00-23:00 值班"
-        }
-      ],
-      "contradictions": [
+          "description": "張偉 21:00-23:00 值班（有塗改）",
+          "order": 2
+        },
         {
-          "id": "contradiction_1",
-          "description": "張偉說監控 8 點壞了，但他 9 點才值班，他怎麼知道確切時間？",
-          "clueRequired": "clue_shift"
+          "id": "clue_contradiction",
+          "name": "證詞矛盾",
+          "description": "張偉怎麼知道監控確切故障時間？",
+          "order": 3
+        },
+        {
+          "id": "clue_monitor",
+          "name": "監控屏幕",
+          "description": "屏幕黑但指示燈綠（故意關閉）",
+          "order": 4,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_shift_log",
+          "name": "值班記錄本",
+          "description": "時間被塗改（19:00→20:00→21:00）",
+          "order": 5,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_phone_msg",
+          "name": "催債短信",
+          "description": "「催債公司：還剩 50 萬，明天最後期限」",
+          "order": 6,
+          "fromInteractable": true
         }
       ],
       "choices": [
         {
-          "text": "最終推理",
+          "text": "對質李娜",
           "nextScene": "scene_4"
         }
       ]
@@ -170,14 +381,127 @@
     {
       "id": "scene_4",
       "name": "辦公室",
+      "time": "00:15",
+      "background": "#1a1a2e",
+      "characters": ["lina"],
+      "interactables": [
+        {
+          "id": "insurance_doc",
+          "name": "保險文件",
+          "icon": "📄",
+          "clueId": "clue_insurance_doc"
+        },
+        {
+          "id": "briefcase",
+          "name": "李娜的公文包",
+          "icon": "💼",
+          "clueId": "clue_briefcase"
+        },
+        {
+          "id": "file_cabinet",
+          "name": "文件櫃",
+          "icon": "🗄️",
+          "clueId": "clue_file_cabinet"
+        }
+      ],
+      "dialogues": [
+        {
+          "speaker": "linming",
+          "text": "李小姐，我有一些問題。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "lina",
+          "text": "請說，林偵探。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "你說 18:00 和张偉一起檢查鑽石，但值班記錄顯示他 20:00 才巡邏展覽室。",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "lina",
+          "text": "（微微一怔）是、是 18:00 沒錯。可能張隊長記錯了時間。",
+          "emotion": "nervous"
+        },
+        {
+          "speaker": "linming",
+          "text": "還有，展櫃是從裡面敲碎的。有鑰匙的人才能做到。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "展櫃鑰匙有兩把，一把在張隊長那裡，一把...在我這裡。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "（盯著她）你願意讓我檢查一下嗎？",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "（下意識護住公文包）當然...不過現在太晚了，明天吧...",
+          "emotion": "nervous"
+        },
+        {
+          "speaker": "narrator",
+          "text": "【發現矛盾】李娜護住公文包，她也有展櫃鑰匙"
+        }
+      ],
+      "clues": [
+        {
+          "id": "clue_key_holder",
+          "name": "鑰匙持有者",
+          "description": "張偉 + 李娜都有鑰匙",
+          "order": 1
+        },
+        {
+          "id": "clue_lina_nervous",
+          "name": "李娜的異常",
+          "description": "護住公文包",
+          "order": 2
+        },
+        {
+          "id": "clue_insurance_doc",
+          "name": "保險文件",
+          "description": "內部人員作案可拒賠",
+          "order": 3,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_briefcase",
+          "name": "公文包",
+          "description": "露出玻璃切割器",
+          "order": 4,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_file_cabinet",
+          "name": "文件櫃",
+          "description": "張偉的資料：欠賭債 50 萬",
+          "order": 5,
+          "fromInteractable": true
+        }
+      ],
+      "choices": [
+        {
+          "text": "最終推理",
+          "nextScene": "scene_5"
+        }
+      ]
+    },
+    {
+      "id": "scene_5",
+      "name": "美術館大廳",
       "time": "00:30",
       "background": "#1a1a2e",
-      "characters": ["lina", "wangye"],
+      "characters": ["lina", "zhangwei"],
       "dialogues": [
         {
           "speaker": "narrator",
-          "text": "所有人都在辦公室等待你的結論。",
-          "effect": ""
+          "text": "所有人都在大廳等待你的結論。"
         },
         {
           "speaker": "linming",
@@ -185,18 +509,15 @@
           "emotion": "confident"
         }
       ],
+      "clues": [],
       "choices": [
         {
-          "text": "指認張偉是兇手",
-          "nextScene": "ending_good",
-          "requiredClue": "clue_shift"
-        },
-        {
           "text": "指認李娜是兇手",
-          "nextScene": "ending_bad"
+          "nextScene": "ending_good",
+          "requiredClues": ["clue_key_holder", "clue_briefcase", "clue_insurance_doc"]
         },
         {
-          "text": "指認王老爺子是兇手",
+          "text": "指認張偉是兇手",
           "nextScene": "ending_bad"
         }
       ]
@@ -206,47 +527,64 @@
       "name": "真相結局",
       "time": "",
       "background": "#4ecca3",
-      "characters": [],
+      "characters": ["lina"],
       "dialogues": [
         {
           "speaker": "linming",
-          "text": "兇手就是你，張偉！",
+          "text": "兇手就是你，李娜！",
           "emotion": "confident"
         },
         {
-          "speaker": "zhangwei",
-          "text": "你、你有什麼證據！",
+          "speaker": "lina",
+          "text": "（依然冷靜）證據呢？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "第一，你有展櫃鑰匙，可以從內部敲碎玻璃。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第二，地板上有你的高跟鞋印，37 碼。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第三，你是保險受益人，有 500 萬動機。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第四，你早就知道張偉欠賭債，文件櫃里有他的資料。你想嫁禍給他！",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第五，你公文包裡的玻璃切割器，就是用那個工具切開玻璃的！",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "（終於慌了）你...你怎麼知道的...",
           "emotion": "panic"
         },
         {
-          "speaker": "linming",
-          "text": "第一，你說監控 8 點壞了，但你 9 點才值班，你怎麼知道確切時間？",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "linming",
-          "text": "第二，玻璃碎片在外側，說明是從裡面敲碎的。只有內部人員能做到。",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "linming",
-          "text": "第三，你欠了 50 萬賭債，對吧？",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "zhangwei",
-          "text": "（崩潰）我、我只是想借錢周轉...我真的沒想偷鑽石...",
+          "speaker": "lina",
+          "text": "我只是想拿回我應得的！這顆鑽石本來就該是我的！",
           "emotion": "cry"
         },
         {
           "speaker": "narrator",
-          "text": "真相大白。張偉利用職務之便複製了鑰匙，從內部敲碎玻璃。",
-          "effect": ""
+          "text": "李娜是美術館創始人的女兒。父親去世後，鑽石被捐贈給美術館。她認為自己才是合法繼承人。"
         },
         {
           "speaker": "narrator",
-          "text": "鑽石被找回，張偉被警察帶走。",
-          "effect": ""
+          "text": "她計劃嫁禍給欠賭債的張偉，獲得 500 萬保險賠償。但她沒料到警報提前響了。"
+        },
+        {
+          "speaker": "narrator",
+          "text": "李娜被警察帶走。鑽石被找回，保險公司撤銷理賠。"
         },
         {
           "speaker": "narrator",
@@ -267,42 +605,49 @@
       "name": "錯誤結局",
       "time": "",
       "background": "#e74c3c",
-      "characters": [],
+      "characters": ["zhangwei", "lina"],
       "dialogues": [
         {
           "speaker": "linming",
-          "text": "兇手就是你！",
+          "text": "兇手就是你，張偉！",
           "emotion": "confident"
         },
         {
-          "speaker": "lina",
-          "text": "林偵探，你有證據嗎？",
-          "emotion": "calm"
+          "speaker": "zhangwei",
+          "text": "（緊張）你、你有什麼證據！",
+          "emotion": "panic"
         },
         {
           "speaker": "linming",
-          "text": "你是策展人，最有機會接觸鑽石...",
+          "text": "你有展櫃鑰匙，也有動機。你欠了 50 萬賭債，對吧？",
           "emotion": "unsure"
         },
         {
           "speaker": "lina",
-          "text": "就憑這個？美術館每天幾百人參觀，每個人都有機會。",
+          "text": "（冷靜地）林偵探，僅此而已嗎？有鑰匙的人不止他一個。動機也不能證明他偷了鑽石。",
           "emotion": "calm"
         },
         {
-          "speaker": "wangye",
-          "text": "哼，這樣的偵探，真是笑話。",
-          "emotion": "angry"
+          "speaker": "linming",
+          "text": "這個...",
+          "emotion": "unsure"
+        },
+        {
+          "speaker": "lina",
+          "text": "館長，我認為這位偵探需要更多證據。",
+          "emotion": "calm"
         },
         {
           "speaker": "narrator",
-          "text": "你被請出了美術館。真正的兇手逍遙法外。",
-          "effect": ""
+          "text": "張偉被暫時停職調查。但真正的兇手逍遙法外。"
         },
         {
           "speaker": "narrator",
-          "text": "你的聲譽受損，事務所門庭冷落。",
-          "effect": ""
+          "text": "一周後，李娜以「安全隱患」為由，將鑽石轉移到「更安全」的地方。"
+        },
+        {
+          "speaker": "narrator",
+          "text": "你的聲譽受損，事務所門庭冷落。"
         },
         {
           "speaker": "narrator",
@@ -324,30 +669,28 @@
       "name": "林明",
       "role": "主角",
       "description": "私家偵探，28 歲",
+      "emoji": "🕵️",
       "color": "#3498db"
     },
     "zhangwei": {
       "name": "張偉",
       "role": "嫌疑人",
       "description": "保安隊長，35 歲",
+      "emoji": "👮",
       "color": "#e67e22"
     },
     "lina": {
       "name": "李娜",
       "role": "嫌疑人",
       "description": "策展人，32 歲",
+      "emoji": "👩",
       "color": "#9b59b6"
-    },
-    "wangye": {
-      "name": "王老爺子",
-      "role": "嫌疑人",
-      "description": "捐贈者，68 歲",
-      "color": "#95a5a6"
     },
     "narrator": {
       "name": "旁白",
       "role": "敘述者",
       "description": "故事敘述者",
+      "emoji": "📖",
       "color": "#7f8c8d"
     }
   },
@@ -358,6 +701,6 @@
     "confident": "自信",
     "panic": "驚慌",
     "cry": "崩潰",
-    "angry": "生氣"
+    "unsure": "不確定"
   }
 }

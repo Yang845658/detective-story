@@ -50,6 +50,58 @@ body {
     gap: 20px;
 }
 
+/* ===== 互動物品區域 ===== */
+.interactables-area {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px;
+    flex-wrap: wrap;
+}
+
+.interactable-btn {
+    background: linear-gradient(135deg, rgba(78, 204, 163, 0.2) 0%, rgba(56, 161, 105, 0.2) 100%);
+    border: 2px solid #4ecca3;
+    border-radius: 10px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-size: 0.95em;
+}
+
+.interactable-btn:hover {
+    background: linear-gradient(135deg, rgba(78, 204, 163, 0.4) 0%, rgba(56, 161, 105, 0.4) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 204, 163, 0.4);
+}
+
+.interactable-btn:active {
+    transform: translateY(0);
+}
+
+.interactable-btn.investigated {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #7f8c8d;
+}
+
+.interactable-btn.investigated:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.interactable-icon {
+    font-size: 1.5em;
+}
+
+.interactable-name {
+    font-weight: bold;
+}
+
 /* ===== 場景顯示 ===== */
 .scene-display {
     position: relative;

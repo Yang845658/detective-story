@@ -400,13 +400,16 @@ class DetectiveGame {
             element.classList.remove('key-dialogue');
         }
         
+        // 修復：使用數組處理中文字符，避免亂碼
+        const chars = Array.from(text);
         const speed = isKeyDialogue ? this.dialogueSpeed * 1.5 : this.dialogueSpeed;
         
         let index = 0;
         
         const timer = setInterval(() => {
-            if (index < text.length) {
-                element.textContent += text.charAt(index);
+            if (index < chars.length) {
+                // 修復：使用數組索引而非 charAt，避免中文字符問題
+                element.textContent += chars[index];
                 index++;
             } else {
                 clearInterval(timer);

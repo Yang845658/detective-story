@@ -1,8 +1,99 @@
 {
   "title": "午夜美術館",
-  "version": "2.0",
-  "description": "偵探推理互動小說 - 修訂版",
+  "version": "3.0",
+  "description": "偵探推理互動小說 - 深度優化版",
+  "mechanics": {
+    "timePressure": {
+      "enabled": true,
+      "startTime": "23:00",
+      "deadline": "09:00",
+      "warningThresholds": [480, 240, 120, 60]
+    },
+    "evidenceChain": {
+      "enabled": true,
+      "requiredForHiddenEnding": [
+        "clue_window_trace",
+        "clue_alarm_fingerprint",
+        "clue_shift_log_press",
+        "clue_file_cabinet",
+        "clue_photo"
+      ]
+    }
+  },
   "scenes": [
+    {
+      "id": "scene_prologue",
+      "name": "序幕 - 李娜的視角",
+      "time": "18:00",
+      "background": "#f5f5dc",
+      "characters": ["lina"],
+      "isFlashback": true,
+      "interactables": [],
+      "dialogues": [
+        {
+          "speaker": "narrator",
+          "text": "傍晚 6 點，閉館前最後一次檢查。"
+        },
+        {
+          "speaker": "lina",
+          "text": "（站在展櫃前，輕聲）爸爸，我會保護好它的。",
+          "emotion": "sad"
+        },
+        {
+          "speaker": "narrator",
+          "text": "李娜想起三天前的對話。"
+        },
+        {
+          "speaker": "curator",
+          "text": "李小姐，這顆鑽石是鎮館之寶，但保險公司說...如果是內部人員作案，他們可以拒賠。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "lina",
+          "text": "內部人員...怎麼可能？",
+          "emotion": "nervous"
+        },
+        {
+          "speaker": "curator",
+          "text": "只是理論上。再說，你父親當年把鑽石捐贈給我們，你從來沒有後悔過嗎？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "lina",
+          "text": "（沉默片刻）那是他的意願。我...尊重他的選擇。",
+          "emotion": "sad"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "李小姐，該閉館了。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "narrator",
+          "text": "他們一起確認了展櫃安全。李娜不知道，這是她最後一次見到完整的鑽石。"
+        }
+      ],
+      "clues": [
+        {
+          "id": "clue_lina_father",
+          "name": "李娜與父親",
+          "description": "情感複雜，父親捐贈了鑽石",
+          "order": 1
+        },
+        {
+          "id": "clue_insurance_clause",
+          "name": "保險條款",
+          "description": "內部人員作案可拒賠",
+          "order": 2
+        }
+      ],
+      "choices": [
+        {
+          "text": "開始第 1 章",
+          "nextScene": "scene_1"
+        }
+      ]
+    },
     {
       "id": "scene_1",
       "name": "美術館大廳",
@@ -27,6 +118,12 @@
           "name": "訪客登記簿",
           "icon": "📋",
           "clueId": "clue_logbook"
+        },
+        {
+          "id": "newspaper",
+          "name": "地上的報紙",
+          "icon": "🗞️",
+          "clueId": "clue_newspaper"
         }
       ],
       "dialogues": [
@@ -36,16 +133,34 @@
         },
         {
           "speaker": "narrator",
-          "text": "你抵達美術館，張偉在大廳等候。"
+          "text": "你叫林明，32 歲，前刑警隊偵探，半年前辭職開了私家偵探事務所。這是你最需要成功的一單。"
+        },
+        {
+          "speaker": "narrator",
+          "text": "雨下得很大，美術館的霓虹燈在雨中閃爍。你推開大門，鈴鐺作響。"
         },
         {
           "speaker": "zhangwei",
-          "text": "林、林偵探！你可算來了！",
+          "text": "林、林偵探！你可算來了...",
           "emotion": "nervous"
+        },
+        {
+          "speaker": "narrator",
+          "text": "（他不停擦汗，手裡的對講機發出沙沙聲。你注意到他眼下的黑眼圈，像是幾天沒睡好。）"
         },
         {
           "speaker": "linming",
           "text": "張隊長，別著急。詳細說說情況。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（低聲）拜託...這件事不能鬧大。館長明天——不，今天早上 9 點要從國外回來，如果知道鑽石被盜，他會...",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "linming",
+          "text": "先說案發經過。",
           "emotion": "calm"
         },
         {
@@ -55,17 +170,17 @@
         },
         {
           "speaker": "linming",
-          "text": "你一個人來的？",
+          "text": "你一個人值班？",
           "emotion": "calm"
         },
         {
           "speaker": "zhangwei",
-          "text": "對，我、我一個人值班。",
+          "text": "對，我、我一個人...",
           "emotion": "nervous"
         },
         {
           "speaker": "narrator",
-          "text": "（張偉下意識地摸了摸口袋，有什麼東西在響）"
+          "text": "（他下意識地摸了摸口袋，有什麼聲音在響）"
         },
         {
           "speaker": "linming",
@@ -74,12 +189,12 @@
         },
         {
           "speaker": "zhangwei",
-          "text": "沒、沒什麼！手機而已...最近總有催債電話，煩死了...",
+          "text": "沒、沒什麼！手機而已...最近總有騷擾電話，煩死了...",
           "emotion": "panic"
         },
         {
           "speaker": "narrator",
-          "text": "【獲得線索】張偉最近接催債電話"
+          "text": "你注意到他說話時一直在看牆上的鐘。距離館長抵達，只剩不到 10 小時。"
         }
       ],
       "clues": [
@@ -98,28 +213,41 @@
         {
           "id": "clue_zhangwei_nervous",
           "name": "張偉的異常",
-          "description": "緊張、接催債電話",
+          "description": "緊張、黑眼圈、對講機沙沙聲",
           "order": 3
+        },
+        {
+          "id": "clue_time_pressure",
+          "name": "時間壓力",
+          "description": "館長 9:00 抵達（剩 10 小時）",
+          "order": 4
         },
         {
           "id": "clue_phone_record",
           "name": "電話記錄",
           "description": "22:28 撥打報警，22:25 張偉未接來電",
-          "order": 4,
+          "order": 5,
           "fromInteractable": true
         },
         {
           "id": "clue_clock",
           "name": "掛鐘異常",
           "description": "電池蓋是鬆的，有人打開過",
-          "order": 5,
+          "order": 6,
           "fromInteractable": true
         },
         {
           "id": "clue_logbook",
           "name": "訪客記錄",
-          "description": "李娜 18:00 簽名，備註「閉館檢查」",
-          "order": 6,
+          "description": "李娜 18:00 簽名，備註「閉館檢查」；下午 3 點有記者來訪",
+          "order": 7,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_newspaper",
+          "name": "報紙頭版",
+          "description": "美術館財政危機，鎮館之寶或將拍賣",
+          "order": 8,
           "fromInteractable": true
         }
       ],
@@ -128,7 +256,11 @@
           "text": "勘察展覽室",
           "nextScene": "scene_2"
         }
-      ]
+      ],
+      "timeUpdate": {
+        "currentTime": "23:15",
+        "timeRemaining": 585
+      }
     },
     {
       "id": "scene_2",
@@ -154,12 +286,18 @@
           "name": "地板腳印",
           "icon": "👣",
           "clueId": "clue_footprints"
+        },
+        {
+          "id": "window",
+          "name": "窗戶",
+          "icon": "🪟",
+          "clueId": "clue_window"
         }
       ],
       "dialogues": [
         {
           "speaker": "narrator",
-          "text": "你來到展覽室，看到破碎的展櫃。玻璃碎片散落一地。"
+          "text": "展覽室的燈忽明忽暗。你看到破碎的展櫃，玻璃碎片散落一地。"
         },
         {
           "speaker": "linming",
@@ -170,6 +308,10 @@
           "speaker": "lina",
           "text": "林偵探，我是策展人李娜。有什麼發現嗎？",
           "emotion": "calm"
+        },
+        {
+          "speaker": "narrator",
+          "text": "她穿著黑色套裝，37 碼高跟鞋，眼神平靜得像一潭深水。"
         },
         {
           "speaker": "linming",
@@ -202,12 +344,18 @@
         },
         {
           "speaker": "lina",
-          "text": "是的，這顆鑽石投保了 500 萬。我是受益人，如果出事...",
+          "text": "是的，這顆鑽石投保了 500 萬。我是受益人，如果出事...但保險公司說，如果是內部人員作案，可以拒賠。",
           "emotion": "calm"
         },
         {
-          "speaker": "narrator",
-          "text": "【獲得線索】李娜是保險受益人"
+          "speaker": "linming",
+          "text": "（盯著她）你在暗示什麼？",
+          "emotion": "thinking"
+        },
+        {
+          "speaker": "lina",
+          "text": "（苦笑）我什麼都沒暗示。只是...我父親當年把鑽石捐贈給美術館，他從未想過會有今天。",
+          "emotion": "sad"
         }
       ],
       "clues": [
@@ -226,37 +374,66 @@
         {
           "id": "clue_insurance",
           "name": "保險信息",
-          "description": "投保 500 萬，李娜是受益人",
+          "description": "投保 500 萬，李娜是受益人，內部人員作案可拒賠",
           "order": 3
+        },
+        {
+          "id": "clue_lina_father_detail",
+          "name": "李娜父親",
+          "description": "捐贈鑽石，情感複雜",
+          "order": 4
+        },
+        {
+          "id": "clue_museum_crisis",
+          "name": "美術館財政",
+          "description": "資金鏈斷裂，可能拍賣鑽石",
+          "order": 5
         },
         {
           "id": "clue_cabinet",
           "name": "展櫃狀態",
-          "description": "從內部敲碎，鎖無撬痕（有鑰匙）",
-          "order": 4,
+          "description": "從內部敲碎，鎖無撬痕，切口整齊（先用玻璃刀切割）",
+          "order": 6,
           "fromInteractable": true
         },
         {
           "id": "clue_alarm",
           "name": "警報器",
-          "description": "22:30 觸發，線路有被動過的痕跡",
-          "order": 5,
+          "description": "22:30 觸發，線路有被動過的痕跡，有模糊指紋",
+          "order": 7,
           "fromInteractable": true
         },
         {
           "id": "clue_footprints",
           "name": "地板腳印",
-          "description": "保安皮鞋 + 37 碼高跟鞋",
-          "order": 6,
+          "description": "保安皮鞋 + 37 碼高跟鞋（只到展櫃前，無離開痕跡）",
+          "order": 8,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_window",
+          "name": "窗戶痕跡",
+          "description": "窗戶開著，窗台有泥濘，窗框有刮痕（有人爬進來過）",
+          "order": 9,
           "fromInteractable": true
         }
       ],
+      "flashback": {
+        "id": "flashback_zhangwei_2000",
+        "time": "20:00",
+        "narrator": "zhangwei",
+        "text": "晚上 8 點，張偉開始巡邏。「對不起...我真的沒辦法了。小芸的醫藥費...再交不上就...」他看著展櫃，手在發抖。口袋裡的手機震動，是醫院打來的。「喂？醫生...我、我知道...我會想辦法的，再寬限我兩天...」"
+      },
       "choices": [
         {
           "text": "詢問保安",
           "nextScene": "scene_3"
         }
-      ]
+      ],
+      "timeUpdate": {
+        "currentTime": "23:45",
+        "timeRemaining": 555
+      }
     },
     {
       "id": "scene_3",
@@ -282,6 +459,12 @@
           "name": "張偉的手機",
           "icon": "📱",
           "clueId": "clue_phone_msg"
+        },
+        {
+          "id": "tv_news",
+          "name": "電視新聞",
+          "icon": "📺",
+          "clueId": "clue_tv_news"
         }
       ],
       "dialogues": [
@@ -327,7 +510,50 @@
         },
         {
           "speaker": "narrator",
-          "text": "【發現矛盾】張偉說監控 8 點壞了，但他怎麼知道確切時間？"
+          "text": "他的手一直在發抖。你想起前刑警同事說的話：「說謊的人，身體會出賣他。」"
+        },
+        {
+          "speaker": "narrator",
+          "text": "保安室的門突然被敲響。"
+        },
+        {
+          "speaker": "reporter",
+          "text": "（門外）裡面有人嗎？我是晚報記者！聽說美術館發生盜竊案，能採訪一下嗎？",
+          "emotion": "urgent"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（驚慌）我、我不知道！",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "linming",
+          "text": "（低聲）別出聲。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "reporter",
+          "text": "（繼續敲門）我知道你們在裡面！開門！開門！",
+          "emotion": "urgent"
+        },
+        {
+          "speaker": "narrator",
+          "text": "敲門聲持續了 30 秒，然後漸行漸遠。"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（鬆了一口氣）謝、謝謝...如果被記者拍到，館長會殺了我的...",
+          "emotion": "relieved"
+        },
+        {
+          "speaker": "linming",
+          "text": "（盯著他）所以你修改了值班記錄，關閉了監控，就是為了不讓人知道 20:00 到 21:00 之間發生了什麼，對吧？",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（沉默）我...",
+          "emotion": "cry"
         }
       ],
       "clues": [
@@ -350,24 +576,37 @@
           "order": 3
         },
         {
+          "id": "clue_reporter",
+          "name": "記者到訪",
+          "description": "晚報記者在門外等待",
+          "order": 4
+        },
+        {
           "id": "clue_monitor",
           "name": "監控屏幕",
-          "description": "屏幕黑但指示燈綠（故意關閉）",
-          "order": 4,
+          "description": "屏幕黑但指示燈綠（故意關閉），攝像頭線路被拔掉",
+          "order": 5,
           "fromInteractable": true
         },
         {
           "id": "clue_shift_log",
           "name": "值班記錄本",
-          "description": "時間被塗改（19:00→20:00→21:00）",
-          "order": 5,
+          "description": "時間被塗改（19:00→20:00→21:00），背面有「小芸」壓痕",
+          "order": 6,
           "fromInteractable": true
         },
         {
           "id": "clue_phone_msg",
-          "name": "催債短信",
-          "description": "「催債公司：還剩 50 萬，明天最後期限」",
-          "order": 6,
+          "name": "醫院短信",
+          "description": "「市立醫院：張小芸家長，欠費 38000 元，請盡快繳納」",
+          "order": 7,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_tv_news",
+          "name": "電視新聞",
+          "description": "「美術館財政危機持續，館長表示將尋求私人買家...」",
+          "order": 8,
           "fromInteractable": true
         }
       ],
@@ -376,7 +615,11 @@
           "text": "對質李娜",
           "nextScene": "scene_4"
         }
-      ]
+      ],
+      "timeUpdate": {
+        "currentTime": "00:15",
+        "timeRemaining": 525
+      }
     },
     {
       "id": "scene_4",
@@ -402,6 +645,12 @@
           "name": "文件櫃",
           "icon": "🗄️",
           "clueId": "clue_file_cabinet"
+        },
+        {
+          "id": "photo",
+          "name": "牆上的父女合照",
+          "icon": "🖼️",
+          "clueId": "clue_photo"
         }
       ],
       "dialogues": [
@@ -447,7 +696,27 @@
         },
         {
           "speaker": "narrator",
-          "text": "【發現矛盾】李娜護住公文包，她也有展櫃鑰匙"
+          "text": "你注意到她護住公文包的動作。也注意到她一直在看牆上的照片。"
+        },
+        {
+          "speaker": "linming",
+          "text": "我查過檔案。你父親是珠寶匠，十年前去世。他最擅長的，就是用玻璃切割器處理貴重物品。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "（愣住）你...什麼意思？",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "linming",
+          "text": "用這種專業工具開箱子？李娜，你父親是做什么的？",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "（沉默良久）...是，這是父親留給我的。但我沒有偷鑽石！",
+          "emotion": "cry"
         }
       ],
       "clues": [
@@ -464,44 +733,71 @@
           "order": 2
         },
         {
+          "id": "clue_lina_father_job",
+          "name": "李娜父親職業",
+          "description": "珠寶匠，擅長玻璃切割",
+          "order": 3
+        },
+        {
           "id": "clue_insurance_doc",
           "name": "保險文件",
-          "description": "內部人員作案可拒賠",
-          "order": 3,
+          "description": "三天前簽訂，內部人員作案可拒賠",
+          "order": 4,
           "fromInteractable": true
         },
         {
           "id": "clue_briefcase",
           "name": "公文包",
-          "description": "露出玻璃切割器",
-          "order": 4,
+          "description": "露出玻璃切割器（父親遺物）",
+          "order": 5,
           "fromInteractable": true
         },
         {
           "id": "clue_file_cabinet",
           "name": "文件櫃",
-          "description": "張偉的資料：欠賭債 50 萬",
-          "order": 5,
+          "description": "張偉資料：欠賭債 50 萬，女兒張小芸白血病",
+          "order": 6,
+          "fromInteractable": true
+        },
+        {
+          "id": "clue_photo",
+          "name": "父女合照",
+          "description": "背面：「給我最愛的女兒，這顆鑽石永遠屬於你。——愛你的爸爸」",
+          "order": 7,
           "fromInteractable": true
         }
       ],
+      "flashback": {
+        "id": "flashback_lina_3days",
+        "time": "三天前",
+        "narrator": "lina",
+        "text": "三天前，館長辦公室。「李小姐，我很抱歉。但美術館的資金鏈...我們別無選擇。下周開始，我們會聯繫拍賣行。」「你們不能這樣！這顆鑽石是我父親的！他只是捐贈，不是賣給你們！」「法律上，捐贈就是所有權轉移。我很遺憾，但...」「那我父親的遺願呢？」「現實比遺願殘酷，李小姐。」李娜離開辦公室時，眼神已經變了。她回到自己的辦公室，打開抽屜，拿出父親留給她的玻璃切割器。「對不起，爸爸...我只是想保護它。」"
+      },
+      "phoneCall": {
+        "from": "doctor",
+        "text": "請問是張偉先生嗎？這裡是市立醫院，關於張小芸的病情...我是林明，張偉的...朋友。醫生，他的情況我了解了。我會想辦法的，請再寬限幾天。"
+      },
       "choices": [
         {
           "text": "最終推理",
           "nextScene": "scene_5"
         }
-      ]
+      ],
+      "timeUpdate": {
+        "currentTime": "00:45",
+        "timeRemaining": 495
+      }
     },
     {
       "id": "scene_5",
       "name": "美術館大廳",
-      "time": "00:30",
+      "time": "01:00",
       "background": "#1a1a2e",
       "characters": ["lina", "zhangwei"],
       "dialogues": [
         {
           "speaker": "narrator",
-          "text": "所有人都在大廳等待你的結論。"
+          "text": "所有人都在大廳等待你的結論。雨还在下，時鐘滴答作響。"
         },
         {
           "speaker": "linming",
@@ -513,92 +809,25 @@
       "choices": [
         {
           "text": "指認李娜是兇手",
-          "nextScene": "ending_good",
-          "requiredClues": ["clue_key_holder", "clue_briefcase", "clue_insurance_doc"]
+          "nextScene": "ending_normal",
+          "requiredClues": []
         },
         {
           "text": "指認張偉是兇手",
-          "nextScene": "ending_bad"
-        }
-      ]
-    },
-    {
-      "id": "ending_good",
-      "name": "真相結局",
-      "time": "",
-      "background": "#4ecca3",
-      "characters": ["lina"],
-      "dialogues": [
-        {
-          "speaker": "linming",
-          "text": "兇手就是你，李娜！",
-          "emotion": "confident"
+          "nextScene": "ending_bad",
+          "requiredClues": []
         },
         {
-          "speaker": "lina",
-          "text": "（依然冷靜）證據呢？",
-          "emotion": "calm"
-        },
-        {
-          "speaker": "linming",
-          "text": "第一，你有展櫃鑰匙，可以從內部敲碎玻璃。",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "linming",
-          "text": "第二，地板上有你的高跟鞋印，37 碼。",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "linming",
-          "text": "第三，你是保險受益人，有 500 萬動機。",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "linming",
-          "text": "第四，你早就知道張偉欠賭債，文件櫃里有他的資料。你想嫁禍給他！",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "linming",
-          "text": "第五，你公文包裡的玻璃切割器，就是用那個工具切開玻璃的！",
-          "emotion": "confident"
-        },
-        {
-          "speaker": "lina",
-          "text": "（終於慌了）你...你怎麼知道的...",
-          "emotion": "panic"
-        },
-        {
-          "speaker": "lina",
-          "text": "我只是想拿回我應得的！這顆鑽石本來就該是我的！",
-          "emotion": "cry"
-        },
-        {
-          "speaker": "narrator",
-          "text": "李娜是美術館創始人的女兒。父親去世後，鑽石被捐贈給美術館。她認為自己才是合法繼承人。"
-        },
-        {
-          "speaker": "narrator",
-          "text": "她計劃嫁禍給欠賭債的張偉，獲得 500 萬保險賠償。但她沒料到警報提前響了。"
-        },
-        {
-          "speaker": "narrator",
-          "text": "李娜被警察帶走。鑽石被找回，保險公司撤銷理賠。"
-        },
-        {
-          "speaker": "narrator",
-          "text": "【通關！真相結局】",
-          "effect": "success"
+          "text": "還有第三個人（隱藏）",
+          "nextScene": "ending_perfect",
+          "requiredClues": ["clue_window", "clue_alarm", "clue_shift_log", "clue_file_cabinet", "clue_photo"],
+          "hidden": true
         }
       ],
-      "choices": [
-        {
-          "text": "重新開始",
-          "nextScene": "scene_1",
-          "restart": true
-        }
-      ]
+      "timeUpdate": {
+        "currentTime": "01:00",
+        "timeRemaining": 480
+      }
     },
     {
       "id": "ending_bad",
@@ -647,7 +876,7 @@
         },
         {
           "speaker": "narrator",
-          "text": "你的聲譽受損，事務所門庭冷落。"
+          "text": "你的聲譽受損，事務所門庭冷落。張偉的女兒因為欠費停止治療..."
         },
         {
           "speaker": "narrator",
@@ -655,10 +884,239 @@
           "effect": "fail"
         }
       ],
+      "achievements": [],
       "choices": [
         {
           "text": "重新開始",
-          "nextScene": "scene_1",
+          "nextScene": "scene_prologue",
+          "restart": true
+        }
+      ]
+    },
+    {
+      "id": "ending_normal",
+      "name": "普通結局",
+      "time": "",
+      "background": "#4ecca3",
+      "characters": ["lina"],
+      "dialogues": [
+        {
+          "speaker": "linming",
+          "text": "兇手就是你，李娜！",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "（依然冷靜）證據呢？",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "第一，你有展櫃鑰匙，可以從內部敲碎玻璃。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第二，地板上有你的高跟鞋印，37 碼。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第三，你是保險受益人，有 500 萬動機。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "linming",
+          "text": "第四，你公文包裡的玻璃切割器，就是用那個工具切開玻璃的！",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "（終於慌了）你...你怎麼知道的...",
+          "emotion": "panic"
+        },
+        {
+          "speaker": "lina",
+          "text": "我只是想拿回我應得的！這顆鑽石本來就該是我的！",
+          "emotion": "cry"
+        },
+        {
+          "speaker": "narrator",
+          "text": "李娜是美術館創始人的女兒。父親去世後，鑽石被捐贈給美術館。她認為自己才是合法繼承人。"
+        },
+        {
+          "speaker": "narrator",
+          "text": "她計劃嫁禍給欠賭債的張偉，獲得 500 萬保險賠償。但她沒料到警報提前響了。"
+        },
+        {
+          "speaker": "narrator",
+          "text": "李娜被警察帶走。鑽石被找回，保險公司撤銷理賠。張偉因為試圖掩蓋被開除，但女兒的醫藥費...沒人幫忙。"
+        },
+        {
+          "speaker": "narrator",
+          "text": "【通關！普通結局】",
+          "effect": "success"
+        }
+      ],
+      "achievements": [
+        {
+          "id": "achievement_truth",
+          "name": "真相大白",
+          "description": "找出真正的兇手"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新開始",
+          "nextScene": "scene_prologue",
+          "restart": true
+        }
+      ]
+    },
+    {
+      "id": "ending_perfect",
+      "name": "完美結局",
+      "time": "",
+      "background": "#f5f5dc",
+      "characters": ["lina", "zhangwei"],
+      "dialogues": [
+        {
+          "speaker": "linming",
+          "text": "（搖頭）你們兩個，都不是真正的兇手。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "（愣住）什麼意思？",
+          "emotion": "surprised"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（也愣住）不是我們？",
+          "emotion": "surprised"
+        },
+        {
+          "speaker": "linming",
+          "text": "真正的兇手，是那個記者。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "narrator",
+          "text": "你拿出窗台上的照片。"
+        },
+        {
+          "speaker": "linming",
+          "text": "今天下午，有個記者來過美術館。你說沒讓他進來，但他真的沒進來嗎？",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "我、我確實沒讓他進...",
+          "emotion": "nervous"
+        },
+        {
+          "speaker": "linming",
+          "text": "但他從後門爬進來了。窗台上有他的泥濘腳印，窗框上有他的刮痕，警報器上有他的指紋。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "lina",
+          "text": "那...鑽石呢？",
+          "emotion": "unsure"
+        },
+        {
+          "speaker": "linming",
+          "text": "他偷了鑽石，但你們兩個的行動，讓他不得不提前逃走。鑽石...應該還在美術館內。",
+          "emotion": "confident"
+        },
+        {
+          "speaker": "narrator",
+          "text": "你們一起搜索美術館。在保安室的電視機後面，找到了鑽石。"
+        },
+        {
+          "speaker": "linming",
+          "text": "李娜，我知道你想保護父親的遺物。但用這種方式，只會毀了它。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "linming",
+          "text": "張偉，我知道你女兒需要醫藥費。但這不是犯罪的理由。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "lina",
+          "text": "（流淚）我只是...不想失去最後的紀念。",
+          "emotion": "cry"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（低頭）我只是...想救女兒。",
+          "emotion": "cry"
+        },
+        {
+          "speaker": "linming",
+          "text": "（嘆息）我有個提議。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "narrator",
+          "text": "【林明的計劃】1. 歸還鑽石，館長撤銷報案 2. 李娜放棄保險索賠 3. 張偉辭職，但美術館資助小芸治療 4. 記者被逮捕（爬窗入室盜竊）"
+        },
+        {
+          "speaker": "narrator",
+          "text": "一周後，美術館。"
+        },
+        {
+          "speaker": "curator",
+          "text": "林偵探，多虧了你。鑽石回來了，我們決定...不再拍賣它。",
+          "emotion": "calm"
+        },
+        {
+          "speaker": "lina",
+          "text": "（走過來）林偵探，謝謝你。我...我終於放下了。",
+          "emotion": "relieved"
+        },
+        {
+          "speaker": "zhangwei",
+          "text": "（帶著女兒）林先生，小芸想謝謝你。",
+          "emotion": "relieved"
+        },
+        {
+          "speaker": "xiaoyun",
+          "text": "謝謝叔叔！",
+          "emotion": "happy"
+        },
+        {
+          "speaker": "narrator",
+          "text": "雨停了，陽光透過雲層。你看著這一幕，微笑著離開。"
+        },
+        {
+          "speaker": "narrator",
+          "text": "【完美結局！真相反白】",
+          "effect": "perfect"
+        }
+      ],
+      "achievements": [
+        {
+          "id": "achievement_truth",
+          "name": "真相大白",
+          "description": "找出真正的兇手"
+        },
+        {
+          "id": "achievement_detective",
+          "name": "真正的偵探",
+          "description": "發現隱藏的第三個人"
+        },
+        {
+          "id": "achievement_save_all",
+          "name": "拯救所有人",
+          "description": "達成完美結局"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新開始",
+          "nextScene": "scene_prologue",
           "restart": true
         }
       ]
@@ -668,23 +1126,51 @@
     "linming": {
       "name": "林明",
       "role": "主角",
-      "description": "私家偵探，28 歲",
+      "description": "私家偵探，32 歲，前刑警隊偵探",
       "emoji": "🕵️",
       "color": "#3498db"
     },
     "zhangwei": {
       "name": "張偉",
       "role": "嫌疑人",
-      "description": "保安隊長，35 歲",
+      "description": "保安隊長，35 歲，女兒患白血病",
       "emoji": "👮",
       "color": "#e67e22"
     },
     "lina": {
       "name": "李娜",
       "role": "嫌疑人",
-      "description": "策展人，32 歲",
+      "description": "策展人，32 歲，美術館創始人之女",
       "emoji": "👩",
       "color": "#9b59b6"
+    },
+    "curator": {
+      "name": "館長",
+      "role": "配角",
+      "description": "美術館館長",
+      "emoji": "👔",
+      "color": "#7f8c8d"
+    },
+    "reporter": {
+      "name": "記者",
+      "role": "真兇",
+      "description": "晚報記者，真正的盜竊犯",
+      "emoji": "📰",
+      "color": "#e74c3c"
+    },
+    "doctor": {
+      "name": "醫生",
+      "role": "配角",
+      "description": "市立醫院醫生",
+      "emoji": "👨‍⚕️",
+      "color": "#2ecc71"
+    },
+    "xiaoyun": {
+      "name": "小芸",
+      "role": "配角",
+      "description": "張偉的女兒，5 歲，患白血病",
+      "emoji": "👧",
+      "color": "#f39c12"
     },
     "narrator": {
       "name": "旁白",
@@ -701,6 +1187,11 @@
     "confident": "自信",
     "panic": "驚慌",
     "cry": "崩潰",
-    "unsure": "不確定"
+    "unsure": "不確定",
+    "sad": "悲傷",
+    "surprised": "驚訝",
+    "relieved": "鬆懈",
+    "happy": "開心",
+    "urgent": "急切"
   }
 }

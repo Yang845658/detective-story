@@ -166,12 +166,12 @@ class DetectiveGame {
         const timeDisplay = this.createTimeDisplay();
         
         this.timePressure.timerInterval = setInterval(() => {
-            this.timePressure.timeRemaining--;
+            this.timePressure.timeRemaining -= 10; // 每次減少 10 分鐘（1 秒 = 10 分鐘）
             this.updateTimeDisplay(timeDisplay);
             
-            // 警告閾值
+            // 警告閾值（調整為 10 的倍數）
             const thresholds = this.storyData.mechanics?.timePressure?.warningThresholds || [480, 240, 120, 60];
-            if (thresholds.includes(this.timePressure.timeRemaining)) {
+            if (thresholds.some(t => Math.abs(t - this.timePressure.timeRemaining) < 10)) {
                 this.showTimeWarning(this.timePressure.timeRemaining);
             }
             
@@ -179,7 +179,7 @@ class DetectiveGame {
             if (this.timePressure.timeRemaining <= 0) {
                 this.showTimeUpEnding();
             }
-        }, 1000); // 實際遊戲中可改為 60000 (1 分鐘)
+        }, 1000); // 1 秒 = 10 分鐘，600 分鐘 = 60 秒 = 1 小時遊戲時間
     }
     
     stopTimePressureTimer() {
